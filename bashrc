@@ -51,3 +51,6 @@ eval "$(starship init bash)"
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
+
+# run whenver shell loads
+bash ./scripts/shell-load.sh
