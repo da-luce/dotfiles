@@ -15,4 +15,3 @@ Clone this repository into `.dotfiles/` your home directory. Note that complex c
 
 - `copy-ssh-wsl.sh`: copies ssh keys from Windows to `~/.ssh/` when using WSL. Optional argument for Window's username if different from Linux.
 - `shell-load.sh`: script set to run on shell load by default. Fetches from remote to ensure everything stays up to date.
-
