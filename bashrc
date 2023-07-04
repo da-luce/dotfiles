@@ -33,15 +33,15 @@ force_color_prompt=yes
 
 # ALIASES
 
-alias .. = 'cd ..'
-alias ... = 'cd ../../../'
-alias .... = 'cd ../../../../'
-alias ..... = 'cd ../../../../'
+alias ..='cd ..'
+alias ...='cd ../../../'
+alias ....='cd ../../../../'
+alias .....='cd ../../../../'
 
-alias stat = 'git status'
-alias com = 'git commit -m'
+alias stat='git status'
+alias com='git commit -m'
 
-alias windows = 'cd /mnt/c/Users/sixsa/'
+alias windows='cd /mnt/c/Users/sixsa/'
 
 # MISC
 
@@ -53,4 +53,4 @@ eval "$(starship init bash)"
 shopt -s checkwinsize
 
 # run whenver shell loads
-bash ./scripts/shell-load.sh
+bash $HOME/.dotfiles/scripts/shell-load.sh
