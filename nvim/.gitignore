@@ -1,0 +1,8 @@
+# Packer compiled isn't necessarily up to date. Run :PackerSync on instalation
+plugin/
+
+# Don't track unused plugins
+lua/unused_plugins/
+
+# Don't tack readme
+README.md

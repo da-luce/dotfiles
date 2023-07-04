@@ -30,24 +30,24 @@ add-apt-repository ppa:neovim-ppa/stable
 apt update
 
 # install launchpad apps
-apt install neovim
+apt install -y neovim
 
 # Other PPAs
-curl -sS https://starship.rs/install.sh | bash                 	# starship
-curl -fsSL https://deb.nodesource.com/setup_18.x | -E bash -	# node.js
-curl https://repo.continuum.io/archive/Anaconda3-5.2.0-Linux-x86_64.sh | bash # Conda
+curl -sS https://starship.rs/install.sh | sh                 	# starship
+curl -fsSL https://deb.nodesource.com/setup_18.x | sh			# node.js
+curl https://repo.continuum.io/archive/Anaconda3-5.2.0-Linux-x86_64.sh | sh # Conda
 
 # install other apps
-apt install -y nodejs
+apt-get install -y nodejs
 npm install -g npm@latest # ensure latest version of npm was installed
 
-apt-get install libncurses5-dev libncursesw5-dev
+apt-get install -y libncurses5-dev libncursesw5-dev
 
 ## System Update and Upgrade
 apt update
-apt install --fix-missing -y
-apt upgrade --allow-downgrades -y
-apt full-upgrade --allow-downgrades -y
+apt install -y --fix-missing
+apt upgrade -y --allow-downgrades
+apt full-upgrade -y --allow-downgrades
 
 ## System Clean Up
 apt install -f
