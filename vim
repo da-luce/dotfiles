@@ -1,4 +1,4 @@
-"" basic vim settings for quick edits
+"" basic & sane vim settings for quick edits
 
 "" General
 set number	        "" Show line numbers

@@ -1,5 +1,9 @@
+# fancy prompt using starship
+# language specific prompt stylings are untested
+
 format = """
 $username\
+$hostname\
 $directory\
 $git_branch\
 $git_status\
@@ -21,7 +25,7 @@ add_newline = false
 [username]
 show_always = true
 style_user = "bold purple"
-style_root = "bold red"
+style_root = "bold purple"
 format = '[$user ]($style)'
  
 [directory]
