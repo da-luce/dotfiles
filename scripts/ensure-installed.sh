@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# ensure listed packages are installed
+# TODO: add version checking?
+
 packages=(
     curl
     wget
@@ -28,4 +31,6 @@ done
 
 if all_installed; then
     echo "All packages installed."
+else
+    echo "Some packages do not appear to be installed."
 fi

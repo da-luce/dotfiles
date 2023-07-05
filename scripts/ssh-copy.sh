@@ -1,7 +1,7 @@
 #!/bin/bash
 
-## copy ssh keys if running WSL. Optional argument of windows username if
-## different than Linux username
+# copy ssh keys if running WSL. Optional argument of windows username if
+# different than Linux username
 
 WINDOWS_USERNAME=$1;
 
@@ -15,7 +15,8 @@ echo "set $HOME/.ssh/ permissions to 700" ;;
 
 if [ -d "/mnt/c/Users/$WINDOWS_USERNAME/.ssh" ]; then
     cp -a /mnt/c/Users/$WINDOWS_USERNAME/.ssh/. $HOME/.ssh/
-    # set correct permissions (ttps://meng6.net/pages/blog/permission_of_.ssh_files/)
+    # set correct permissions
+    # https://meng6.net/pages/blog/permission_of_.ssh_files/
     for FILE in $HOME/.ssh/*; do
         case $FILE in
             (*.pub)

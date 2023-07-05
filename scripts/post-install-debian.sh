@@ -43,6 +43,9 @@ npm install -g npm@latest # ensure latest version of npm was installed
 
 apt-get install -y libncurses5-dev libncursesw5-dev
 
+# Misc
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
 ## System Update and Upgrade
 apt update
 apt install -y --fix-missing
