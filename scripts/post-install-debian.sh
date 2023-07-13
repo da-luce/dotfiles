@@ -30,6 +30,7 @@ add-apt-repository ppa:neovim-ppa/stable
 apt update
 
 # install launchpad apps
+# neovim
 apt install -y neovim
 
 # Other PPAs
@@ -43,8 +44,10 @@ npm install -g npm@latest # ensure latest version of npm was installed
 
 apt-get install -y libncurses5-dev libncursesw5-dev
 
-# Misc
+# Plugin managers
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+git clone --depth 1 https://github.com/wbthomason/packer.nvim\
+ ~/.local/share/nvim/site/pack/packer/start/packer.nvim
 
 ## System Update and Upgrade
 apt update
