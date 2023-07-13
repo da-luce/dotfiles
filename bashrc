@@ -35,6 +35,8 @@ force_color_prompt=yes
 
 alias la='ls -a'
 
+alias f=fzf --preview='head -$LINES {}'
+
 alias ..='cd ..'
 alias ...='cd ../../'
 alias ....='cd ../../../'
@@ -44,15 +46,16 @@ alias stat='git status'
 alias com='git commit -m'
 
 alias windows='cd /mnt/c/Users/sixsa/'
+alias dot='cd $HOME/.dotfiles'
 
 # MISC
+
+# source autojump
+. /usr/share/autojump/autojump.sh
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
-
-# run whenver shell loads
-bash $HOME/.dotfiles/scripts/shell-load.sh
 
 # Add to path so that starship can run
 export PATH="/usr/local/bin:$PATH"

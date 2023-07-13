@@ -43,6 +43,7 @@ format = '[ $symbol $branch ]($style)'
 ahead = ' ${count}'
 diverged = '󰘖  {ahead_count}  ${behind_count}'
 behind = ' ${count}'
+up_to_date = ''
 style = "bold blue"
 format = '[ $ahead_behind ]($style)'
 
