@@ -41,7 +41,6 @@ return packer.startup(function(use)
             require("plugins.config.tokyonight")
         end
     }
-
     use {
         'catppuccin/nvim',
         tag = 'v0.2.4',
@@ -49,51 +48,10 @@ return packer.startup(function(use)
             require("plugins.config.catppuccin")
         end
     }
-    use 'sam4llis/nvim-tundra'
     use 'hoppercomplex/calvera-dark.nvim'
     use {
         'metalelf0/jellybeans-nvim',
         requires = 'rktjmp/lush.nvim'
-    }
-    use 'cocopon/iceberg.vim'
-    use 'aktersnurra/no-clown-fiesta.nvim'
-    use 'sainnhe/everforest'
-    use 'arcticicestudio/nord-vim'
-    use 'FrenzyExists/aquarium-vim'
-    use 'dikiaap/minimalist'
-    use 'challenger-deep-theme/vim'
-    use 'AlexvZyl/nordic.nvim'
-    use 'mountain-theme/Mountain'
-    use 'JoosepAlviste/palenightfall.nvim'
-
-    -- Common dependencies
-    use 'nvim-lua/plenary.nvim'
-
-    -- Start screen
-    -- use {
-    --     'glepnir/dashboard-nvim',
-    --     -- Pin, more recent version breaks something
-    --     commit = '1aab263f4773106abecae06e684f762d20ef587e',
-    --     config = function()
-    --         require("plugins.config.dashboard")
-    --     end
-    -- }
-
-    -- File explorer
-    use {
-        'kyazdani42/nvim-tree.lua',
-        tag = 'compat-nvim-0.7*',
-        requires = {
-            'kyazdani42/nvim-web-devicons',
-        },
-        cmd = {
-            'NvimTreeOpen',
-            'NvimTreeToggle',
-            'NvimTreeFocus',
-        },
-        config = function()
-            require("plugins.config.nvim-tree-config")
-        end
     }
 
     -- Buffers
@@ -216,11 +174,11 @@ return packer.startup(function(use)
         requires = 'nvim-lua/plenary.nvim'
     }
 
-    use({
+    use {
         "iamcco/markdown-preview.nvim",
-        run = function() vim.fn["mkdp#util#install"]() end,
-    })
-    
-    use({ "iamcco/markdown-preview.nvim", run = "cd app && npm install", setup = function() vim.g.mkdp_filetypes = { "markdown" } end, ft = { "markdown" }, })
+        run = "cd app && npm install",
+        setup = function() vim.g.mkdp_filetypes = { "markdown" } end,
+        ft = { "markdown" }
+    }
 
 end)
