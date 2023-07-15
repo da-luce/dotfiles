@@ -58,10 +58,11 @@ map("v", ">", ">gv", opts)
 -- PLUGINS --
 
 -- NvimTree
-map("n", "<leader>e", ":NvimTreeToggle<CR>", opts)
+map("n", "<leader>e", ":NvimTreeFocus<CR>", opts)
 
 -- Telescope
 map("n", "<leader>ff", ":Telescope find_files<CR>", opts)
+map("n", "<leader>s", ":Telescope file_browser<CR>", opts)
 map("n", "<leader>ft", ":Telescope live_grep<CR>", opts)
 map("n", "<leader>fp", ":Telescope projects<CR>", opts)
 map("n", "<leader>fb", ":Telescope buffers<CR>", opts)

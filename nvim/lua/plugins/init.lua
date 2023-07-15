@@ -35,9 +35,16 @@ return packer.startup(function(use)
 
     -- Colorschemes
     use 'tiagovla/tokyodark.nvim'
-    use 'folke/tokyonight.nvim'
+    use {
+        'folke/tokyonight.nvim',
+        config = function ()
+            require("plugins.config.tokyonight")
+        end
+    }
+
     use {
         'catppuccin/nvim',
+        tag = 'v0.2.4',
         config = function ()
             require("plugins.config.catppuccin")
         end
@@ -55,8 +62,6 @@ return packer.startup(function(use)
     use 'FrenzyExists/aquarium-vim'
     use 'dikiaap/minimalist'
     use 'challenger-deep-theme/vim'
-    use 'yuttie/sublimetext-spacegray.vim'
-    use 'ackyshake/Spacegray.vim'
     use 'AlexvZyl/nordic.nvim'
     use 'mountain-theme/Mountain'
     use 'JoosepAlviste/palenightfall.nvim'
@@ -65,28 +70,29 @@ return packer.startup(function(use)
     use 'nvim-lua/plenary.nvim'
 
     -- Start screen
-    use {
-        'glepnir/dashboard-nvim',
-        -- Pin, more recent version breaks something
-        commit = '1aab263f4773106abecae06e684f762d20ef587e',
-        config = function()
-            require("plugins.config.dashboard")
-        end
-    }
+    -- use {
+    --     'glepnir/dashboard-nvim',
+    --     -- Pin, more recent version breaks something
+    --     commit = '1aab263f4773106abecae06e684f762d20ef587e',
+    --     config = function()
+    --         require("plugins.config.dashboard")
+    --     end
+    -- }
 
     -- File explorer
     use {
         'kyazdani42/nvim-tree.lua',
+        tag = 'compat-nvim-0.7*',
         requires = {
             'kyazdani42/nvim-web-devicons',
         },
         cmd = {
             'NvimTreeOpen',
             'NvimTreeToggle',
+            'NvimTreeFocus',
         },
-        tag = 'nightly',
         config = function()
-            require("plugins.config.nvim-tree")
+            require("plugins.config.nvim-tree-config")
         end
     }
 
@@ -99,7 +105,10 @@ return packer.startup(function(use)
             require("plugins.config.bufferline")
         end
     }
-    use 'famiu/bufdelete.nvim'  -- Preserve window layout when deleting buffers
+    -- use {
+    --     'famiu/bufdelete.nvim',  -- Preserve window layout when deleting buffers
+    --     commit = '8933abc09df6c381d47dc271b1ee5d266541448e',
+    -- }
 
     -- Status line
     use {
@@ -112,54 +121,12 @@ return packer.startup(function(use)
         end
     }
 
-    --[[ Other status line
-    use {
-        'feline-nvim/feline.nvim',
-        config = function ()
-            require("plugins.config.feline")
-        end
-    }]]
-
-    --[[ Replace UI for messages, cmdline and popupmenu 
-    use {
-        'folke/noice.nvim',
-        requires = {
-            "MunifTanjim/nui.nvim",
-            {
-                "rcarriga/nvim-notify",
-                config = function()
-                    require("plugins.config.notify")
-                end
-            },
-        },
-        config = function()
-            require("plugins.config.noice")
-        end
-    }
-    ]]
-
-    -- UI for nvim-lsp progress
-    use {
-        'j-hui/fidget.nvim',
-        config = function ()
-            require("plugins.config.fidget")
-        end
-
-    }
-
-    --[[
-    use {
-        'nvim-zh/colorful-winsep.nvim',
-        config = function ()
-            require("plugins.config.winsep")
-        end
-    }]]
-
     -- EDITOR PLUGINS
 
     -- Git
     use {
         'lewis6991/gitsigns.nvim',
+        tag = 'v0.5*',
         config = function()
             require("plugins.config.gitsigns")
         end
@@ -198,65 +165,6 @@ return packer.startup(function(use)
 
     -- GENERAL/CORE
 
-    -- Sessions
-    use {
-        'rmagatti/auto-session',
-        config = function()
-            require("plugins.config.auto-session")
-        end
-    }
-    use {
-        'rmagatti/session-lens',
-        requires = {'rmagatti/auto-session',
-                    'nvim-telescope/telescope.nvim'},
-        config = function()
-            require("plugins.config.session-lens")
-        end
-    }
-
-
-    -- Manage and install LSP servers
-    use 'williamboman/mason-lspconfig.nvim'
-    use {
-        'williamboman/mason.nvim',
-        config = function()
-            require("plugins.config.lsp.mason")
-        end
-    }
-
-    -- Config for LSP Servers
-    use {
-        'neovim/nvim-lspconfig',
-        config = function()
-            require("plugins.config.lsp.lspconfig")
-        end
-    }
-
-    --[[
-    -- Formatting
-    use {
-        'jayp0521/mason-null-ls.nvim',
-        config = function ()
-            require("plugins.config.lsp.mason-null-ls")
-        end
-    }
-    use {
-        'jose-elias-alvarez/null-ls.nvim',
-        config = function ()
-            require("plugins.config.lsp.null-ls")
-        end
-    }
-    ]]
-
-    -- Breadcrumbs (not implemented yet)
-    use {
-        'SmiteshP/nvim-navic',
-        requires = "neovim/nvim-lspconfig",
-        config = function()
-            require("plugins.config.breadcrumbs")
-        end
-    }
-
     -- Which key
     use {
         'folke/which-key.nvim',
@@ -268,27 +176,13 @@ return packer.startup(function(use)
     -- Autocompletion
     use {
         'hrsh7th/nvim-cmp',
+        requires = {"L3MON4D3/LuaSnip", tag = "v1.*"},
         config = function()
             require("plugins.config.cmp")
         end
     }
-    use 'hrsh7th/cmp-buffer'        -- nvim-cmp source for buffer words
     use 'hrsh7th/cmp-path'          -- nvim-cmp source for filesystem paths
     use 'hrsh7th/cmp-cmdline'       -- nvim-cmp source for vim's cmdline
-    use 'hrsh7th/cmp-nvim-lsp'      -- nvim-cmp source for Neovim builtin LSP client
-    use 'hrsh7th/cmp-nvim-lua'      -- nvim-cmp source for the Neovim Lua API
-
-    -- Snippets
-    use({"L3MON4D3/LuaSnip", tag = "v1.*"})
-
-    -- Display diagnostics
-    use {
-        "folke/trouble.nvim",
-        requires = "kyazdani42/nvim-web-devicons",
-        config = function()
-            require("plugins.config.trouble")
-        end
-    }
 
     -- Telescope
     use {
@@ -310,6 +204,7 @@ return packer.startup(function(use)
     -- Better syntax highlighting
     use {
         'nvim-treesitter/nvim-treesitter',
+        commit = '4cccb6f494eb255b32a290d37c35ca12584c74d0',
         run = ':TSUpdate',
         config = function()
             require("plugins.config.treesitter")
@@ -321,12 +216,11 @@ return packer.startup(function(use)
         requires = 'nvim-lua/plenary.nvim'
     }
 
-    -- install without yarn or npm
     use({
         "iamcco/markdown-preview.nvim",
         run = function() vim.fn["mkdp#util#install"]() end,
     })
-
+    
     use({ "iamcco/markdown-preview.nvim", run = "cd app && npm install", setup = function() vim.g.mkdp_filetypes = { "markdown" } end, ft = { "markdown" }, })
 
 end)
