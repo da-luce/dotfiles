@@ -19,7 +19,7 @@ bufferline.setup {
                 text = "",
                 -- Removing fixes tokyodark and doesn't seem to affect other themes
                 -- highlight = "PanelHeading",
-                padding = 0,
+                padding = 1,
                 text_align = "center",
                 separator = false
             },

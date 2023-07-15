@@ -19,7 +19,7 @@ local options = {
     signcolumn = "yes",         -- permanent column for LSP & Git icons in gutter
     ruler = false,              -- hide line and column number of the cursor position in cmdline (already habe in statusline!)
     showmode = false,           -- don't show mode in the command line (already have in statusline!)
-    cmdheight=0,                -- hide the command line
+    cmdheight=1,                -- hide the command line (NOT WORKING)
 
     -- Interactions
 

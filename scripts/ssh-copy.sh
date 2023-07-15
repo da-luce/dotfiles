@@ -11,7 +11,7 @@ fi
 
 mkdir -p $HOME/.ssh/
 sudo chmod 700 $HOME/.ssh/
-echo "set $HOME/.ssh/ permissions to 700" ;;
+echo "set $HOME/.ssh/ permissions to 700"
 
 if [ -d "/mnt/c/Users/$WINDOWS_USERNAME/.ssh" ]; then
     cp -a /mnt/c/Users/$WINDOWS_USERNAME/.ssh/. $HOME/.ssh/
