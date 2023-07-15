@@ -2,3 +2,6 @@
 *~
 *.swp
 *.swo
+
+# ignore compiled nvim plugins
+nvim/plugin
