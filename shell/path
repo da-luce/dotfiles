@@ -1,0 +1,32 @@
+#!/bin/sh
+
+# Reset path so it does not get longer each time this is sourced (Mac OSX
+# sources .profile on every new terminal, so this is desirable)
+PATH=$(getconf PATH);
+
+case $OS in
+
+    # linux
+    linux*)
+        PATH="/usr/local/bin:$PATH" # starship
+        ;;
+
+    # Mac OSX
+    darwin*)
+        PATH="/usr/local/bin:$PATH"         # ???
+        PATH="/opt/homebrew/bin:$PATH"      # homebrew executable
+        ;;
+    # Cygwin
+    cygwin*)
+        ;;
+    
+    # MinGW
+    msys*)
+        ;;
+
+    # Other
+    *)
+        ;;
+esac
+
+export PATH;

@@ -1,0 +1,32 @@
+#!/bin/sh
+
+# Source OS dependant locations
+
+case $OS in
+
+    # linux
+    linux*)
+        if [ -f /usr/share/autojump/autojump.sh ]; then
+            . /usr/share/autojump/autojump.sh
+        fi
+        ;;
+
+    # Mac OSX
+    darwin*)
+        if [ -f /opt/homebrew/etc/profile.d/autojump.sh ]; then
+            . /opt/homebrew/etc/profile.d/autojump.sh
+        fi
+        ;;
+
+    # Cygwin
+    cygwin*)
+        ;;
+    
+    # MinGW
+    msys*)
+        ;;
+
+    # Other
+    *)
+        ;;
+esac

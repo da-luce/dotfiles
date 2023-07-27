@@ -1,0 +1,48 @@
+#!/bin/sh
+
+alias la='ls -a'
+
+alias f=fzf --preview='head -$LINES {}'
+
+alias ..='cd ..'
+alias ...='cd ../../'
+alias ....='cd ../../../'
+alias .....='cd ../../../../'
+
+alias stat='git status'
+alias com='git commit -m'
+
+alias dot='cd $HOME/.dotfiles'
+
+# OS specific aliases
+case $OS in
+
+    # linux
+    linux*)
+        
+        # WSL (default kernel name is 'Microsoft')
+        if [ "$KERNEL" = "microsoft" ]; then
+            alias windows='cd /mnt/c/Users/sixsa/'
+        
+        # Normal, good ol' linux
+        else
+            :
+        fi
+        ;;
+
+    # Mac OSX
+    darwin*)
+        ;;
+
+    # Cygwin
+    cygwin*)
+        ;;
+    
+    # MinGW
+    msys*)
+        ;;
+
+    # Other
+    *)
+        ;;
+esac

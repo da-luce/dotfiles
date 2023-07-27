@@ -1,0 +1,23 @@
+local wezterm = require 'wezterm'
+
+local config = {}
+
+if wezterm.config_builder then
+  config = wezterm.config_builder()
+end
+
+config.color_scheme = 'iceberg-dark'
+local scheme = wezterm.get_builtin_color_schemes()['iceberg-dark']
+
+config.colors = {
+    background = 'black',
+}
+
+config.window_background_opacity = 0.97
+config.macos_window_background_blur = 100
+config.font = wezterm.font 'JetBrains Mono'
+config.enable_tab_bar = false
+config.use_fancy_tab_bar = true
+config.font_size = 15.5
+
+return config

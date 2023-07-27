@@ -1,23 +1,18 @@
 #!/bin/bash
+# Copy ssh keys from host to client
 
-# copy ssh keys if running WSL. Optional argument of windows username if
-# different than Linux username
+host_ssh=$1;    # host .ssh directory
+client_ssh=$2;  # client .ssh directory
 
-WINDOWS_USERNAME=$1;
+mkdir -p client_ssh
+sudo chmod 700 client_ssh
+echo "set  $client_ssh permissions to 700"
 
-if [$WINDOWS_USERNAME == ""]; then
-    WINDOWS_USERNAME=$USER
-fi
-
-mkdir -p $HOME/.ssh/
-sudo chmod 700 $HOME/.ssh/
-echo "set $HOME/.ssh/ permissions to 700"
-
-if [ -d "/mnt/c/Users/$WINDOWS_USERNAME/.ssh" ]; then
-    cp -a /mnt/c/Users/$WINDOWS_USERNAME/.ssh/. $HOME/.ssh/
+if [ -d host_ssh ]; then
+    cp -a host_ssh client_ssh
     # set correct permissions
     # https://meng6.net/pages/blog/permission_of_.ssh_files/
-    for FILE in $HOME/.ssh/*; do
+    for FILE in client_ssh*; do
         case $FILE in
             (*.pub)
                 sudo chmod 644 $FILE
@@ -31,5 +26,5 @@ if [ -d "/mnt/c/Users/$WINDOWS_USERNAME/.ssh" ]; then
         esac
     done
 else
-    echo "failure: could not find Windows .ssh folder"
+    echo "failure: could not find host folder '$host_ssh'"
 fi
