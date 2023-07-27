@@ -1,0 +1,35 @@
+#cloud-config
+hostname: dev
+
+# Update and upgrade
+package_update: true
+package_upgrade: true
+
+# Packages
+packages:
+ - curl
+ - wget
+ - git
+ - lua5.3
+ - default-jre
+ - python3
+ - tmux
+ - htop
+ - fzf
+ - autojump
+ - software-properties-common
+ - gcc
+ - gdb
+ - vite
+
+# Users
+users:
+  - default
+  - name: sixsa
+    gecos: Dalton Luce
+    groups: [sudo]
+    shell: /bin/bash
+
+# Mounts (how does this work?)
+mounts:
+    - ["~/.ssh", "/mnt"]

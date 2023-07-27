@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# General .rc file for interactive shells
+
+# If not running interactively, don't do anything
+case $- in
+    *i*);;      # interactive
+    *) return;; # script 
+esac
+
+# Aliases (broken into own file as it has OS specific stuff)
+if [ -f "$HOME/.shell/alias" ]; then
+    . "$HOME/.shell/alias"
+fi
+
+# Source other stuff (broken into own file as it has OS specific stuff)
+if [ -f "$HOME/.shell/source" ]; then
+    . "$HOME/.shell/source"
+fi
+
+# fancy prompt with starship
+eval "$(starship init "$SHELL")"

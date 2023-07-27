@@ -1,0 +1,43 @@
+#!/bin/sh
+
+# ~/.profile: executed by the command interpreter for login shells.
+
+# This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login exists. 
+# Note, however, that we will have a ~/.bash_profile and it will simply source
+# this file as a matter of course.
+
+lowercase()
+{
+    echo "$1" | tr '[:upper:]' '[:lower:]'
+}
+
+# Enviorment variables
+
+ENV="$HOME/.rc";                                            export ENV      # shell init
+EDITOR=$(basename "$(command -v nvim || command -v vim)");  export EDITOR   # Editor
+VISUAL=EDITOR;                                              export VISUAL   # Visual editor
+BASH_SILENCE_DEPRECATION_WARNING=1;                         export BASH_SILENCE_DEPRECATION_WARNING # Silence apple zsh message
+XDG_CONFIG_HOME="$HOME./config/";                           export XDG_CONFIG_HOME
+DOTFILES="$HOME/.dotfiles/";                                export DOTFILES
+
+# get os info
+OS=$(lowercase "$(uname)");                                 export OS
+KERNEL=$(lowercase "$(uname -s)");                          export KERNEL        
+MACH=$(lowercase "$(uname -m)");                            export MACH
+
+# Set path (broken into own file as it has OS specific stuff)
+if [ -f "$HOME/.shell/path" ]; then
+    . "$HOME/.shell/path"
+fi
+
+# Mac OSX does not source .bashrc by default
+# If using bash, source it here
+# https://superuser.com/questions/703415/why-do-people-source-bash-profile-from-bashrc-instead-of-the-other-way-round
+case $OS in
+    darwin*)
+        if [ -f "$HOME/.bashrc" ]; then
+            . "$HOME/.bashrc"
+        fi
+        ;;
+    *);;
+esac
