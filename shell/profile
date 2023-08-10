@@ -17,12 +17,13 @@ ENV="$HOME/.rc";                                            export ENV      # sh
 EDITOR=$(basename "$(command -v nvim || command -v vim)");  export EDITOR   # Editor
 VISUAL=EDITOR;                                              export VISUAL   # Visual editor
 BASH_SILENCE_DEPRECATION_WARNING=1;                         export BASH_SILENCE_DEPRECATION_WARNING # Silence apple zsh message
-XDG_CONFIG_HOME="$HOME./config/";                           export XDG_CONFIG_HOME
+XDG_CONFIG_HOME="$HOME/.config";                            export XDG_CONFIG_HOME
 DOTFILES="$HOME/.dotfiles/";                                export DOTFILES
+TERM="xterm-256color";                                      export TERM
 
 # get os info
 OS=$(lowercase "$(uname)");                                 export OS
-KERNEL=$(lowercase "$(uname -s)");                          export KERNEL        
+KERNEL=$(lowercase "$(uname -r)");                          export KERNEL        
 MACH=$(lowercase "$(uname -m)");                            export MACH
 
 # Set path (broken into own file as it has OS specific stuff)
@@ -30,14 +31,7 @@ if [ -f "$HOME/.shell/path" ]; then
     . "$HOME/.shell/path"
 fi
 
-# Mac OSX does not source .bashrc by default
-# If using bash, source it here
 # https://superuser.com/questions/703415/why-do-people-source-bash-profile-from-bashrc-instead-of-the-other-way-round
-case $OS in
-    darwin*)
-        if [ -f "$HOME/.bashrc" ]; then
-            . "$HOME/.bashrc"
-        fi
-        ;;
-    *);;
-esac
+if [ -f "$HOME/.bashrc" ]; then
+    . "$HOME/.bashrc"
+fi

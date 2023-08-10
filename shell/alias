@@ -20,18 +20,20 @@ case $OS in
     # linux
     linux*)
         
-        # WSL (default kernel name is 'Microsoft')
-        if [ "$KERNEL" = "microsoft" ]; then
-            alias windows='cd /mnt/c/Users/sixsa/'
+        case $KERNEL in
+            # WSL
+            *microsoft*)
+                alias windows='cd /mnt/c/Users/sixsa/';;
         
-        # Normal, good ol' linux
-        else
-            :
-        fi
+             # Normal, good ol' linux
+            *)
+                : ;;
+        esac
         ;;
 
     # Mac OSX
     darwin*)
+        alias vm="multipass"
         ;;
 
     # Cygwin

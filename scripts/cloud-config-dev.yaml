@@ -21,15 +21,23 @@ packages:
  - gcc
  - gdb
  - vite
+ - npm
+ - neovim
+
+# PPAs
+apt:
+  sources:
+    ignored1: # this name is irrelevant?
+      source: "ppa:neovim-ppa/unstable"
+
 
 # Users
 users:
-  - default
   - name: sixsa
     gecos: Dalton Luce
     groups: [sudo]
     shell: /bin/bash
 
-# Mounts (how does this work?)
-mounts:
-    - ["~/.ssh", "/mnt"]
+# Commands
+runcmd:
+  - npm install n -g && n latest # install latest version of nodejs
