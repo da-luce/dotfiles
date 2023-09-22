@@ -4,6 +4,9 @@
 # sources .profile on every new terminal, so this is desirable)
 PATH=$(getconf PATH);
 
+PATH="/usr/local/anaconda3/bin:$PATH"           # anaconda
+PATH="/opt/homebrew/anaconda3/bin:$PATH"
+
 case $OS in
 
     # linux
@@ -19,7 +22,7 @@ case $OS in
     # Cygwin
     cygwin*)
         ;;
-    
+
     # MinGW
     msys*)
         ;;

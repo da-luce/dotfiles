@@ -36,3 +36,4 @@ force_color_prompt=yes
 if [ -f "$HOME/.shell/rc" ]; then
     . "$HOME/.shell/rc"
 fi
+alias nav='docker-compose run --rm nav'
