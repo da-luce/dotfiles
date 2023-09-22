@@ -35,3 +35,6 @@ fi
 if [ -f "$HOME/.bashrc" ]; then
     . "$HOME/.bashrc"
 fi
+
+# opam configuration
+test -r /Users/sixsa/.opam/opam-init/init.sh && . /Users/sixsa/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true

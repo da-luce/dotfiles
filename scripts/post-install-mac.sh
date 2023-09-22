@@ -7,7 +7,9 @@ brew tap homebrew/cask-versions
 # Dev
 brew install starship
 brew install autojump
-
+brew install ncurses
+brew install meson
+brew install gdb
 brew install lua
 brew install tree-sitter
 brew install luajit

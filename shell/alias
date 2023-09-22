@@ -1,6 +1,7 @@
 #!/bin/sh
 
-alias la='ls -a'
+alias la='ls -la --color=auto'
+alias ls='ls -l --color=auto'
 
 alias f=fzf --preview='head -$LINES {}'
 
@@ -8,6 +9,10 @@ alias ..='cd ..'
 alias ...='cd ../../'
 alias ....='cd ../../../'
 alias .....='cd ../../../../'
+
+alias ece='ssh dcl252@ecelinux.ece.cornell.edu'
+
+alias pdf='pandoc -f markdown-implicit_figures -o'
 
 alias stat='git status'
 alias com='git commit -m'
