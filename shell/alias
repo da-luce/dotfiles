@@ -12,7 +12,7 @@ alias .....='cd ../../../../'
 
 alias ece='ssh dcl252@ecelinux.ece.cornell.edu'
 
-alias pdf='pandoc -f markdown-implicit_figures -o'
+alias pdf='pandoc -f markdown-implicit_figures --columns=80 --wrap=auto -o'
 
 alias stat='git status'
 alias com='git commit -m'
