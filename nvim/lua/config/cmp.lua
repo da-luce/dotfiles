@@ -1,13 +1,15 @@
 -- LunarVim cmp setup
+
+-- TODO: one of these is not ok
 local cmp_status_ok, cmp = pcall(require, "cmp")
-if not cmp_status_ok then
-	return
-end
+-- if not cmp_status_ok then
+-- 	return
+-- end
 
 local snip_status_ok, luasnip = pcall(require, "luasnip")
-if not snip_status_ok then
-	return
-end
+-- if not snip_status_ok then
+-- 	return
+-- end
 
 -- What does this do?
 local check_backspace = function()
