@@ -18,5 +18,12 @@ if [ -f "$HOME/.shell/source" ]; then
     . "$HOME/.shell/source"
 fi
 
+# For Xquartz
+if command -v xhost &> /dev/null
+then
+  xhost +localhost
+fi
+
+
 # fancy prompt with starship
 eval "$(starship init "$SHELL")"

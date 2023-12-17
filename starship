@@ -9,6 +9,7 @@ $git_branch\
 $git_status\
 $c\
 $java\
+$ocaml\
 $nodejs\
 $conda\
 $docker_context\
@@ -65,6 +66,9 @@ format = '[ $symbol $environment ](dimmed green) '
 symbol = " " # java
 style = "dimmed brown"
 format = '[ $symbol ($version) ]($style)'
+
+[ocaml]
+format = 'via [🐪 $switch_name]($style) '
 
 [nodejs]
 symbol = "󰎙 " # node
