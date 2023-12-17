@@ -1,5 +1,5 @@
-require("plugins.init")
+require('plugins')
 
-require("core.options")
-require("core.keymaps")
-require("core.autocommands")
+require('options')
+require('keymaps')
+require('autocommands')
