@@ -15,7 +15,8 @@ vim.opt.background = "dark"        -- use dark colorscheme for themes with light
 vim.opt.signcolumn = "yes"         -- permanent column for LSP & Git icons in gutter
 vim.opt.ruler = false              -- hide line and column number of the cursor position in cmdline (already habe in statusline!)
 vim.opt.showmode = false           -- don't show mode in the command line (already have in statusline!)
-vim.opt.cmdheight=1                -- hide the command line (NOT WORKING)
+vim.opt.cmdheight = 0              -- hide the command line when not in use
+vim.opt.colorcolumn = "80"
 
 -- Interactions
 vim.opt.mouse = "a"                -- enable mouse in all modes
@@ -31,7 +32,7 @@ vim.opt.swapfile = false           -- disable swap files
 
 -- Character highlights
 vim.opt.listchars = {
-    trail = '⋅',            -- shows trailing whitespaces
+    trail = '⋅',           -- shows trailing whitespaces
     tab = '  ',             -- shows tabs as spaces (must override for some reason)
 }
 vim.opt.list = true
@@ -41,3 +42,7 @@ vim.opt.fillchars = {
 
 -- Additional options
 vim.opt.iskeyword:append("-")       -- treats words with `-` as single words
+
+-- Spelling
+vim.opt.spell = true
+vim.opt.spelllang = "en_us"
