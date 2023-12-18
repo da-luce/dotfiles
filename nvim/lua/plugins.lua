@@ -16,7 +16,7 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
     -- Automatic indentation
-	{
+    {
         "tpope/vim-sleuth",
         pin = true,
     },
@@ -56,15 +56,21 @@ require("lazy").setup({
     },
 
     -- Colorscheme
+    -- {
+    --     'folke/tokyonight.nvim',
+    --     pin = true,
+    --     lazy = false,
+    --     config = function()
+    --         vim.cmd([[colorscheme tokyonight-night]])
+    --     end,
+    -- },
     {
-        'folke/tokyonight.nvim',
-        pin = true,
-        lazy = false,
+        'sainnhe/everforest',
         config = function()
-			vim.cmd([[colorscheme tokyonight]])
-		end,
+            vim.g.everforest_background = 'hard'
+            vim.cmd([[colorscheme everforest]])
+	end,
     },
-
 
     -- Status line
     {
@@ -114,22 +120,32 @@ require("lazy").setup({
     },
 
     -- Autocompletion
+    -- TODO: currently not working
+    -- {
+    --     'hrsh7th/nvim-cmp',
+    --     pin = true,
+    --     requires = {"L3MON4D3/LuaSnip", tag = "v1.*"},
+    --     config = function()
+    --         require("config.cmp")
+    --     end
+    -- },
+    -- {
+    --     'hrsh7th/cmp-path',          -- nvim-cmp source for filesystem paths
+    --     pin = true,
+    -- },
+    -- {
+    --     'hrsh7th/cmp-cmdline',       -- nvim-cmp source for vim's cmdline
+    --     pin = true,
+    -- },
+
     {
-        'hrsh7th/nvim-cmp',
-        pin = true,
-        requires = {"L3MON4D3/LuaSnip", tag = "v1.*"},
-        config = function()
-            require("config.cmp")
-        end
-    },
-    {
-        'hrsh7th/cmp-path',          -- nvim-cmp source for filesystem paths
-        pin = true,
-    },
-    {
-        'hrsh7th/cmp-cmdline',       -- nvim-cmp source for vim's cmdline
-        pin = true,
-    },
+        "iamcco/markdown-preview.nvim",
+        cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+        ft = { "markdown" },
+        build = function() vim.fn["mkdp#util#install"]() end,
+    }
+
+
 
 })
 
