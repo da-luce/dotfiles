@@ -15,6 +15,60 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
+
+    -- Colorscheme: set first for other plugins that may depend on highlights
+    'folke/tokyonight.nvim',
+    'sainnhe/everforest',
+    {
+        "AlexvZyl/nordic.nvim",
+        pin = true,
+        lazy = false,
+        config = function()
+            vim.g.everforest_background = 'hard'
+            vim.cmd([[colorscheme nordic]])
+        end,
+    },
+
+    -- Tetris game
+    {
+        "alec-gibson/nvim-tetris",
+    },
+
+    -- LSP
+    {
+        "williamboman/mason.nvim",
+        config = function()
+            require("mason").setup()
+        end,
+    },
+    {
+        "williamboman/mason-lspconfig.nvim",
+        config = function()
+            require("mason-lspconfig").setup({ensure_installed = { "lua_ls", "rust_analyzer" },})
+        end,
+    },
+    {
+        "neovim/nvim-lspconfig",
+        config = function()
+            local lspconfig = require('lspconfig')
+            lspconfig.lua_ls.setup {
+                settings = {
+                    Lua = {
+                        diagnostics = {
+                            globals = { 'vim' }
+                        }
+                    }
+                }
+            }
+            lspconfig.rust_analyzer.setup {
+                -- Server-specific settings. See `:help lspconfig-setup`
+                settings = {
+                    ['rust-analyzer'] = {},
+                },
+            }
+        end,
+    },
+
     -- Automatic indentation
     {
         "tpope/vim-sleuth",
@@ -31,7 +85,7 @@ require("lazy").setup({
     },
 
     -- Git & GitHub plugins
-	{
+    {
         "tpope/vim-rhubarb",
         pin = true,
     },
@@ -45,31 +99,13 @@ require("lazy").setup({
     {
         'nvim-telescope/telescope.nvim',
         pin = true,
-        event = "VeryLazy",
         dependencies = {
-            'nvim-lua/plenary.nvim',                      -- general 
+            'nvim-lua/plenary.nvim',                      -- general
             'nvim-treesitter/nvim-treesitter',            -- finder/preview highlighting
             'BurntSushi/ripgrep',                         -- required for live_grep and grep_string
             'nvim-telescope/telescope-fzf-native.nvim',   -- better sorting performance
             'nvim-telescope/telescope-file-browser.nvim', -- file browser
         }
-    },
-
-    -- Colorscheme
-    -- {
-    --     'folke/tokyonight.nvim',
-    --     pin = true,
-    --     lazy = false,
-    --     config = function()
-    --         vim.cmd([[colorscheme tokyonight-night]])
-    --     end,
-    -- },
-    {
-        'sainnhe/everforest',
-        config = function()
-            vim.g.everforest_background = 'hard'
-            vim.cmd([[colorscheme everforest]])
-	end,
     },
 
     -- Status line
@@ -101,14 +137,14 @@ require("lazy").setup({
     },
 
     -- Pair matching characters
-	{
-		"windwp/nvim-autopairs",
+    {
+        "windwp/nvim-autopairs",
         pin = true,
-		event = "InsertEnter",
-		opts = {
-			disable_filetype = { "TelescopePrompt", "vim" },
-		},
-	},
+        event = "InsertEnter",
+        opts = {
+            disable_filetype = { "TelescopePrompt", "vim" },
+        },
+    },
 
     -- Git signs
     {
@@ -143,9 +179,6 @@ require("lazy").setup({
         cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
         ft = { "markdown" },
         build = function() vim.fn["mkdp#util#install"]() end,
-    }
-
-
-
+    },
 })
 
