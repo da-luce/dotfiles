@@ -39,3 +39,10 @@ vim.keymap.set('n', '<leader>fg', builtin.live_grep, {desc = "Telescope live gre
 vim.keymap.set('n', '<leader>fb', builtin.buffers, {desc = "Telescope buffers"})
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, {desc = "Telescope help tags"})
 vim.keymap.set("n", "<leader>s", ":Telescope file_browser<CR>", {desc = "Telescope file browser"})
+
+-- LSP
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, {desc = "Open diagnostic float"})
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, {desc = "Previous diagnostic"})
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, {desc = "Next diagnostic"})
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, {desc = "Set loclist diagnostics"})
+

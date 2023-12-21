@@ -6,7 +6,6 @@ require("ibl").setup {
         highlight = "IblIndent"
     },
     indent = {
-        char = {"", "│"}
+        char = "│"
     }
-
 }
