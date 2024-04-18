@@ -19,6 +19,10 @@ alias com='git commit -m'
 
 alias dot='cd $HOME/.dotfiles'
 
+alias v='nvim'
+
+alias nav='docker-compose run --rm nav'
+
 # OS specific aliases
 case $OS in
 

@@ -25,7 +25,7 @@ require("lazy").setup({
         lazy = false,
         config = function()
             vim.g.everforest_background = 'hard'
-            vim.cmd([[colorscheme nordic]])
+            vim.cmd([[colorscheme tokyonight-night]])
         end,
     },
 
@@ -37,18 +37,21 @@ require("lazy").setup({
     -- LSP
     {
         "williamboman/mason.nvim",
+        pin = true,
         config = function()
             require("mason").setup()
         end,
     },
     {
         "williamboman/mason-lspconfig.nvim",
+        pin = true,
         config = function()
             require("mason-lspconfig").setup({ensure_installed = { "lua_ls", "rust_analyzer" },})
         end,
     },
     {
         "neovim/nvim-lspconfig",
+        pin = true,
         config = function()
             local lspconfig = require('lspconfig')
             lspconfig.lua_ls.setup {
@@ -63,7 +66,7 @@ require("lazy").setup({
             lspconfig.rust_analyzer.setup {
                 -- Server-specific settings. See `:help lspconfig-setup`
                 settings = {
-                    ['rust-analyzer'] = {},
+                    ['rust-analyzer'] = { rustfmt = {extraArgs = {"--edition=2018"},} },
                 },
             }
         end,
