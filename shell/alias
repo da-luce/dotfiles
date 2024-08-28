@@ -10,7 +10,7 @@ alias ...='cd ../../'
 alias ....='cd ../../../'
 alias .....='cd ../../../../'
 
-alias ece='ssh dcl252@ecelinux.ece.cornell.edu'
+alias ece='source $HOME/.dotfiles/scripts/ece.sh; connect'
 
 alias pdf='pandoc -f markdown-implicit_figures --columns=80 --wrap=auto -o'
 
@@ -22,6 +22,7 @@ alias dot='cd $HOME/.dotfiles'
 alias v='nvim'
 
 alias nav='docker-compose run --rm nav'
+alias autobike='docker run -it --rm -v "$(pwd):/usr/app" --user root --env DISPLAY=host.docker.internal:0 autobike'
 
 # OS specific aliases
 case $OS in
@@ -57,3 +58,4 @@ case $OS in
     *)
         ;;
 esac
+

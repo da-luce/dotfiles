@@ -2,6 +2,7 @@
 *~
 *.swp
 *.swo
+.secrets.env
 
 # ignore compiled nvim plugins
 nvim/plugin
