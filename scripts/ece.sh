@@ -9,10 +9,12 @@ VPN_EXEC=/opt/cisco/secureclient/bin/vpn
 BLUE='\033[38;2;137;160;195m'  # #89a0c3 (Light Blue)
 GREEN='\033[38;2;182;189;136m'  # #b6bd88 (Light Green)
 YELLOW='\033[38;2;217;166;126m' # #d9a67e (Peach/Brown)
+RED='\033[38;2;226;121;120m'    # #e27978 (Red)
 NC='\033[0m'
 
 # Message types
 GOOD="${GREEN}●${NC}"
+FAIL="${RED}●${NC}"
 WARN="${YELLOW}◍${NC}"
 INFO="${BLUE}○${NC}"
 
@@ -87,15 +89,8 @@ connect() {
     echo -e "$SSID"
 
     if is_empty "$SSID"; then
-        echo "${WARN} No network detected. Please connect to a network and try again."
+        echo -e "${FAIL} No network detected. Please connect to a network and try again."
         return
-    fi
-
-    if pgrep -x "Xquartz" > /dev/null; then
-        echo -e "${GOOD} XQuartz is running."
-    else
-        echo -e "${WARN} XQuartz is not running."
-        # TODO: start xquartz
     fi
 
     CORNELL_NETWORKS=(
@@ -106,15 +101,12 @@ connect() {
 
     if contains "$SSID" "${CORNELL_NETWORKS[@]}"; then
         echo -e "${GOOD} Connected to a Cornell network [$SSID]."
-        echo -e "${INFO} Logging in to ecelinux..."
-        $LOGIN_COMMAND
     else
         echo -e "${WARN} Not connected to a Cornell network [$SSID]."
         echo -e "${INFO} Checking VPN status..."
 
         if vpn_connected; then
             echo -e "${GOOD} Already connected to Cornell VPN."
-            $LOGIN_COMMAND
         else
             echo -e "${WARN} Not connected to Cornell VPN."
             echo -e "${INFO} Attepting to connect to VPN..."
@@ -128,9 +120,18 @@ connect() {
             fi
 
             echo -e "${GOOD} VPN connected successfully."
-            echo -e "${INFO} Logging in to ecelinux..."
 
-            $LOGIN_COMMAND
         fi
     fi
+
+    if pgrep -x "Xquartz" > /dev/null; then
+        echo -e "${GOOD} XQuartz is running."
+    else
+        echo -e "${WARN} XQuartz is not running."
+        echo -e "${INFO} Starting XQuartz..."
+        open -a XQuartz
+    fi
+
+    echo -e "${INFO} Logging in to ecelinux..."
+    $LOGIN_COMMAND
 }
