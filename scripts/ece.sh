@@ -13,7 +13,7 @@ RED='\033[38;2;226;121;120m'    # #e27978 (Red)
 NC='\033[0m'
 
 # Message types
-GOOD="${GREEN}●${NC}"
+OK="${GREEN}●${NC}"
 FAIL="${RED}●${NC}"
 WARN="${YELLOW}◍${NC}"
 INFO="${BLUE}○${NC}"
@@ -100,13 +100,13 @@ connect() {
     )
 
     if contains "$SSID" "${CORNELL_NETWORKS[@]}"; then
-        echo -e "${GOOD} Connected to a Cornell network [$SSID]."
+        echo -e "${OK} Connected to a Cornell network [$SSID]."
     else
-        echo -e "${WARN} Not connected to a Cornell network [$SSID]."
+        echo -e "${WARN} Not connected to a Cornell network."
         echo -e "${INFO} Checking VPN status..."
 
         if vpn_connected; then
-            echo -e "${GOOD} Already connected to Cornell VPN."
+            echo -e "${OK} Already connected to Cornell VPN."
         else
             echo -e "${WARN} Not connected to Cornell VPN."
             echo -e "${INFO} Attepting to connect to VPN..."
@@ -115,21 +115,29 @@ connect() {
             vpn_return_code=$?
 
             if [ $vpn_return_code -ne 0 ]; then
-                echo -e "${WARN} Failed to connect to VPN. Return code: $vpn_return_code"
+                echo -e "${FAIL} Failed to connect to VPN. Return code: $vpn_return_code"
                 return
             fi
 
-            echo -e "${GOOD} VPN connected successfully."
+            echo -e "${OK} VPN connected successfully."
 
         fi
     fi
 
     if pgrep -x "Xquartz" > /dev/null; then
-        echo -e "${GOOD} XQuartz is running."
+        echo -e "${OK} XQuartz is running."
     else
         echo -e "${WARN} XQuartz is not running."
         echo -e "${INFO} Starting XQuartz..."
         open -a XQuartz
+
+        xquartz_return_code=$?
+
+        if [ $xquartz_return_code -ne 0 ]; then
+            echo -e "${WARN} Could not open XQuartz."
+        else
+            echo -e "${OK} Started XQuartz."
+        fi
     fi
 
     echo -e "${INFO} Logging in to ecelinux..."
