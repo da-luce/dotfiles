@@ -18,7 +18,13 @@ FAIL="${RED}●${NC}"
 WARN="${YELLOW}◍${NC}"
 INFO="${BLUE}○${NC}"
 
-get_ssid() {
+get_os_vers() {
+    local os_version=$(sw_vers -productVersion)
+    echo -e "$os_version"
+}
+
+# For MacOS <= 14
+get_ssid_old() {
     local ssid=$(/System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -I | awk -F': ' '/ SSID/{print $2}')
 
     # Trim leading and trailing whitespace and linebreaks
@@ -26,6 +32,17 @@ get_ssid() {
 
     echo "$ssid"
 }
+
+# More MacOS == 15
+get_ssid_new() {
+    local ssid=$(sudo wdutil info | awk -F': ' '/ SSID/{print $2}')
+
+    # Trim leading and trailing whitespace and linebreaks
+    ssid=$(echo "$ssid" | tr -d '\n' | awk '{$1=$1};1')
+
+    echo "$ssid"
+}
+
 
 is_empty() {
     [ -z "$1" ]
@@ -84,8 +101,17 @@ EOF
 # Main script logic
 connect() {
 
+    echo -ne "${INFO} Getting macOS Version... "
+    VERS=$(get_os_vers)
+    echo -e "$VERS"
+    local major_version=$(echo "$VERS" | awk -F '.' '{print $1}')
+
     echo -ne "${INFO} Fetching SSID... "
-    SSID=$(get_ssid)
+    if (( major_version <= 14 )); then
+        SSID=$(get_ssid_old)
+    else
+        SSID=$(get_ssid_new)
+    fi
     echo -e "$SSID"
 
     if is_empty "$SSID"; then
