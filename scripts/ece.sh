@@ -110,6 +110,7 @@ connect() {
     if (( major_version <= 14 )); then
         SSID=$(get_ssid_old)
     else
+        echo -ne "(may require sudo) "
         SSID=$(get_ssid_new)
     fi
     echo -e "$SSID"

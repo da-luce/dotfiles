@@ -11,6 +11,7 @@ alias ....='cd ../../../'
 alias .....='cd ../../../../'
 
 alias ece='source $HOME/.dotfiles/scripts/ece.sh; connect'
+alias vpn='source $HOME/.dotfiles/scripts/ece.sh; connect_to_vpn'
 
 alias pdf='pandoc -f markdown-implicit_figures --columns=80 --wrap=auto -o'
 
