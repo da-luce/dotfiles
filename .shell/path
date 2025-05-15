@@ -18,6 +18,8 @@ case $OS in
     darwin*)
         PATH="/usr/local/bin:$PATH"         # ???
         PATH="/opt/homebrew/bin:$PATH"      # homebrew executable
+        PATH="/Library/TeX/texbin:$PATH"    # LaTeX bins
+
         ;;
     # Cygwin
     cygwin*)

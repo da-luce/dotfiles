@@ -28,6 +28,7 @@ font:
 
   size: 17
 
+# Isnpired from Iceberg theme.
 colors:
   primary:
     background: '0x000000'
