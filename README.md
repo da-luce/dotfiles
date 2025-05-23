@@ -2,15 +2,11 @@
 
 ## Usage
 
-### Cloning this repo
+### Mac
 
-1. Create a `.dotfiles/` folder in your home directory using `mkdir ~/.dotfiles/`
-2. Move to this directory (`cd ~/.dotfiles/`) and clone into this folder: `git clone https://github.com/da-luce/dotfiles .`
-
-> Note that complex configuration files are siloed off into their own folders. 
-
-### Installing packages
-
-1. Run `post-install-<distro>.sh` to install core packages & libraries
-2. Run `ensured-installed-<distro>.sh` to make sure all packages installed successfully
-3. Run `make-simlinks.sh` to setup simlinks to config file locations. WARNING: these simlinks will overwrite existing files if they exist.
+1. Clone the repo: `git clone https://github.com/da-luce/dotfiles ~/.dotfiles`
+2. Install [Homebrew](https://brew.sh/)
+3. Install [GNU Stow](https://www.gnu.org/software/stow/): `brew install stow`
+4. Navigate to the repo directory: `cd ~/.dotfiles`
+5. Stow the dotfiles: `stow dotfiles`
+6. Install dependencies: `brew bundle --file=install/Brewfile`
