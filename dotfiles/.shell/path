@@ -6,6 +6,7 @@ PATH=$(getconf PATH);
 
 PATH="/usr/local/anaconda3/bin:$PATH"           # anaconda
 PATH="/opt/homebrew/anaconda3/bin:$PATH"
+PATH="$HOME/.toolbox/bin:$PATH"                 # Amazon dev toolbox
 
 case $OS in
 

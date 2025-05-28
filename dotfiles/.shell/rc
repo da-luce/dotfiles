@@ -5,7 +5,7 @@
 # If not running interactively, don't do anything
 case $- in
     *i*);;      # interactive
-    *) return;; # script 
+    *) return;; # script
 esac
 
 # Aliases (broken into own file as it has OS specific stuff)
@@ -27,3 +27,13 @@ fi
 
 # fancy prompt with starship
 eval "$(starship init "$SHELL")"
+
+# Something homebrew related
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Initialize Midway environment and establish secure session
+echo "Starting Midway Secure Session Initialization..."
+echo "Please wait while the environment is being set up..."
+
+# Run the mwinit command to establish the session
+mwinit -o -s
