@@ -2,7 +2,7 @@
 
 # ~/.profile: executed by the command interpreter for login shells.
 
-# This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login exists. 
+# This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login exists.
 # Note, however, that we will have a ~/.bash_profile and it will simply source
 # this file as a matter of course.
 
@@ -11,9 +11,9 @@ lowercase()
     echo "$1" | tr '[:upper:]' '[:lower:]'
 }
 
-# Enviorment variables
+# Environment variables
 
-ENV="$HOME/.rc";                                            export ENV      # shell init
+ENV="$HOME/.shell/rc";                                      export ENV      # shell init
 EDITOR=$(basename "$(command -v nvim || command -v vim)");  export EDITOR   # Editor
 VISUAL=EDITOR;                                              export VISUAL   # Visual editor
 BASH_SILENCE_DEPRECATION_WARNING=1;                         export BASH_SILENCE_DEPRECATION_WARNING # Silence apple zsh message
@@ -23,7 +23,7 @@ TERM="xterm-256color";                                      export TERM
 
 # get os info
 OS=$(lowercase "$(uname)");                                 export OS
-KERNEL=$(lowercase "$(uname -r)");                          export KERNEL        
+KERNEL=$(lowercase "$(uname -r)");                          export KERNEL
 MACH=$(lowercase "$(uname -m)");                            export MACH
 
 # Set path (broken into own file as it has OS specific stuff)

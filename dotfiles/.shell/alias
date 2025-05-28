@@ -30,12 +30,12 @@ case $OS in
 
     # linux
     linux*)
-        
+
         case $KERNEL in
             # WSL
             *microsoft*)
                 alias windows='cd /mnt/c/Users/sixsa/';;
-        
+
              # Normal, good ol' linux
             *)
                 : ;;
@@ -50,7 +50,7 @@ case $OS in
     # Cygwin
     cygwin*)
         ;;
-    
+
     # MinGW
     msys*)
         ;;

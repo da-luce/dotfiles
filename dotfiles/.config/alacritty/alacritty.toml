@@ -1,0 +1,59 @@
+
+[colors.bright]
+black = "0x676767"
+blue = "0x6871FF"
+cyan = "0x5FFDFF"
+green = "0x5FF967"
+magenta = "0xFF76FF"
+red = "0xFF6D67"
+white = "0xFEFFFF"
+yellow = "0xFEFB67"
+
+[colors.cursor]
+cursor = "0xc7c7c7"
+text = "0xFEFFFF"
+
+[colors.normal]
+black = "0x000000"
+blue = "0x9BB8DC"
+cyan = "0x00C5C7"
+green = "0x83AC8E"
+magenta = "0xBAACE2"
+red = "0xE68E8E"
+white = "0xC7C7C7"
+yellow = "0xF5B78A"
+
+[colors.primary]
+background = "0x000000"
+foreground = "0xD1D2D3"
+
+[font]
+size = 17
+
+[font.bold]
+family = "JetBrainsMono Nerd Font Mono"
+style = "Bold"
+
+[font.bold_italic]
+family = "JetBrainsMono Nerd Font Mono"
+style = "Bold Italic"
+
+[font.italic]
+family = "JetBrainsMono Nerd Font Mono"
+style = "Italic"
+
+[font.normal]
+family = "JetBrainsMono Nerd Font Mono"
+style = "Regular"
+
+[window]
+decorations = "buttonless"
+dynamic_padding = true
+opacity = 1.0
+
+[window.padding]
+x = 10
+y = 10
+
+[general]
+import = ["/Users/daluce/.config/alacritty/themes/themes/rose-pine.yaml"]

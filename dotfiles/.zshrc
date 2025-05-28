@@ -1,8 +1,6 @@
-#!/usr/bin/env zsh
 
-# zsh: default shell for Mac OSX
-
-# Source generic rc file
-if [ -f "$HOME/.shell/rc" ]; then
-    . "$HOME/.shell/rc"
-fi
+export PATH=$HOME/.toolbox/bin:$PATH
+eval "$(/opt/homebrew/bin/brew shellenv)"
+# Set up mise for runtime management
+eval "$(mise activate zsh)"
+source /Users/daluce/.brazil_completion/zsh_completion

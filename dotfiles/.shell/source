@@ -1,27 +1,33 @@
 #!/bin/sh
 
-# Source OS dependant locations
+safe_source() {
+    if [ -f "$1" ]; then
+        . "$1"
+    else
+        echo "Warning: File $1 not found"
+    fi
+}
 
+safe_source /Users/daluce/.brazil_completion/bash_completion # Amazon Brazil source?
+safe_source "$HOME/.cargo/env"
+
+# Source OS dependant locations
 case $OS in
 
     # linux
     linux*)
-        if [ -f /usr/share/autojump/autojump.sh ]; then
-            . /usr/share/autojump/autojump.sh
-        fi
+        safe_source /usr/share/autojump/autojump.sh
         ;;
 
     # Mac OSX
     darwin*)
-        if [ -f /opt/homebrew/etc/profile.d/autojump.sh ]; then
-            . /opt/homebrew/etc/profile.d/autojump.sh
-        fi
+        safe_source /opt/homebrew/etc/profile.d/autojump.sh
         ;;
 
     # Cygwin
     cygwin*)
         ;;
-    
+
     # MinGW
     msys*)
         ;;

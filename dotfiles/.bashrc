@@ -5,7 +5,7 @@
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
-# Bash specifc stuff
+# Bash specific stuff
 
 # don't put duplicate lines or lines starting with space in the history
 HISTCONTROL=ignoreboth:erasedups
@@ -36,4 +36,3 @@ force_color_prompt=yes
 if [ -f "$HOME/.shell/rc" ]; then
     . "$HOME/.shell/rc"
 fi
-. "$HOME/.cargo/env"
