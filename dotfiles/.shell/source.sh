@@ -1,12 +1,6 @@
 #!/bin/sh
 
-safe_source() {
-    if [ -f "$1" ]; then
-        . "$1"
-    else
-        echo "Warning: File $1 not found"
-    fi
-}
+source $HOME/.shell/util.sh
 
 safe_source /Users/daluce/.brazil_completion/bash_completion # Amazon Brazil source?
 safe_source "$HOME/.cargo/env"

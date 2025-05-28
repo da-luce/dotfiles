@@ -6,10 +6,7 @@
 # Note, however, that we will have a ~/.bash_profile and it will simply source
 # this file as a matter of course.
 
-lowercase()
-{
-    echo "$1" | tr '[:upper:]' '[:lower:]'
-}
+source $HOME/.shell/util.sh
 
 # Environment variables
 
@@ -26,16 +23,5 @@ OS=$(lowercase "$(uname)");                                 export OS
 KERNEL=$(lowercase "$(uname -r)");                          export KERNEL
 MACH=$(lowercase "$(uname -m)");                            export MACH
 
-# Set path (broken into own file as it has OS specific stuff)
-if [ -f "$HOME/.shell/path" ]; then
-    . "$HOME/.shell/path"
-fi
-
 # https://superuser.com/questions/703415/why-do-people-source-bash-profile-from-bashrc-instead-of-the-other-way-round
-if [ -f "$HOME/.bashrc" ]; then
-    . "$HOME/.bashrc"
-fi
-
-# opam configuration
-test -r /Users/sixsa/.opam/opam-init/init.sh && . /Users/sixsa/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
-. "$HOME/.cargo/env"
+safe_source "$HOME/.bashrc"
