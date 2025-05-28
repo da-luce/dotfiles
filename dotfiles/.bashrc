@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # ~/.bashrc: executed by bash(1) for non-login shells.
+# Bash specifics go in here
 
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
@@ -33,6 +34,4 @@ esac
 force_color_prompt=yes
 
 # Source generic rc file
-if [ -f "$HOME/.shell/rc" ]; then
-    . "$HOME/.shell/rc"
-fi
+safe_source "$HOME/.shell/rc.sh"

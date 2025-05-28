@@ -1,27 +1,21 @@
 #!/bin/sh
 
+alias l='ls --color=auto'
+alias s='git status'
+alias v='nvim'
+alias f=fzf --preview='head -$LINES {}'
+alias c='git commit -m'
+
 alias la='ls -la --color=auto'
 alias ls='ls -l --color=auto'
-
-alias f=fzf --preview='head -$LINES {}'
-
 alias ..='cd ..'
 alias ...='cd ../../'
 alias ....='cd ../../../'
 alias .....='cd ../../../../'
-
 alias ece='source $HOME/.dotfiles/scripts/ece.sh; connect'
 alias vpn='source $HOME/.dotfiles/scripts/ece.sh; connect_to_vpn'
-
 alias pdf='pandoc -f markdown-implicit_figures --columns=80 --wrap=auto -o'
-
-alias stat='git status'
-alias com='git commit -m'
-
 alias dot='cd $HOME/.dotfiles'
-
-alias v='nvim'
-
 alias nav='docker-compose run --rm nav'
 alias autobike='docker run -it --rm -v "$(pwd):/usr/app" --user root --env DISPLAY=host.docker.internal:0 autobike'
 
