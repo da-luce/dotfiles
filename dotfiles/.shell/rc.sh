@@ -30,4 +30,9 @@ eval "$(starship init "$SHELL")"
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # Run mwinit command to establish secure session
-retry_command "mwinit -o -s"
+if [ midway_authenticated ]; then
+  echo "You seem to be authenticated with midway. Continuing..."
+else
+  echo "You don't seem to be authenticated with midway. Logging in..."
+  retry_command "mwinit -o -s"
+fi

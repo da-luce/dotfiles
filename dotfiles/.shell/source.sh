@@ -2,7 +2,6 @@
 
 source $HOME/.shell/util.sh
 
-safe_source /Users/daluce/.brazil_completion/bash_completion # Amazon Brazil source?
 safe_source "$HOME/.cargo/env"
 
 # Source OS dependant locations

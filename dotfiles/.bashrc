@@ -1,10 +1,22 @@
 #!/usr/bin/env bash
 
-# ~/.bashrc: executed by bash(1) for non-login shells.
+# ~/.bashrc is sourced by non-login interactive shells, such as those started by terminal
+# windows (most configs also source .bashrc in interactive login shells though). This is 
+# where you set things specific to your interactive shell that aren't otherwise inherited
+# from the parent process. For example, PS1 is set here because only interactive shell
+#  care about its value, and any interactive shell will source .bashrc anyway, so there
+# is no need to define and export PS1 from .profile.
+
 # Bash specifics go in here
 
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
+
+# If not bash, don't run this.
+# TODO: fix this line...
+if ! [[ "$BASH" ]]; then
+    return
+fi
 
 # Bash specific stuff
 
@@ -33,5 +45,8 @@ esac
 # on the output of commands, not on the prompt
 force_color_prompt=yes
 
+# Amazon Brazil completion?
+safe_source /Users/daluce/.brazil_completion/bash_completion 
+
 # Source generic rc file
-safe_source "$HOME/.shell/rc.sh"
+safe_source $HOME/.shell/rc.sh
