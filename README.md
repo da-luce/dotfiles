@@ -15,3 +15,8 @@
 9. Install extras:
    - `./misc/rectangle/install.sh`
    - `./misc/alt-tab-macos/install.sh`
+
+## TODO
+
+- [ ] Add unit tests to determine a config will work!
+- [ ] Merge any necessary changes from `amazon` branch over to `main`
