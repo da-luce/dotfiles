@@ -1,0 +1,3 @@
+- `Brewfile`: install [Homebrew](https://brew.sh/) packages with `brew bundle --file=Brewfile`
+- `extra.sh`: setup daemons on MacOS
+- `defaults.sh`: write defaults on MacOS

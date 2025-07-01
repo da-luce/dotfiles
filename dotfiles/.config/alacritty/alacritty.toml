@@ -1,0 +1,32 @@
+[general]
+import = [
+  "~/.config/alacritty/themes/themes/gruvbox_material_medium_dark.toml" 
+]
+
+[window]
+opacity = 1.0
+decorations = "Buttonless"
+dynamic_padding = true
+
+[window.padding]
+x = 10
+y = 10
+
+[font]
+size = 17
+
+[font.normal]
+family = "JetBrainsMono Nerd Font Mono"
+style = "Regular"
+
+[font.bold]
+family = "JetBrainsMono Nerd Font Mono"
+style = "Bold"
+
+[font.italic]
+family = "JetBrainsMono Nerd Font Mono"
+style = "Italic"
+
+[font.bold_italic]
+family = "JetBrainsMono Nerd Font Mono"
+style = "Bold Italic"

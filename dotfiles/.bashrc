@@ -32,6 +32,11 @@ esac
 # on the output of commands, not on the prompt
 force_color_prompt=yes
 
+reload() {
+  echo "🔄 Reloading ~/.bashrc"
+  source ~/.bashrc
+}
+
 # Source generic rc file
 if [ -f "$HOME/.shell/rc" ]; then
     . "$HOME/.shell/rc"
