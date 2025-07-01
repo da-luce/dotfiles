@@ -9,7 +9,7 @@ safe_source() {
     if [ -f "$1" ]; then
         . "$1"
     else
-        echo "Warning: File $1 not found"
+        echo "WARN: File $1 not found"
     fi
 }
 
@@ -39,4 +39,13 @@ retry_command() {
             esac
         fi
     done
+}
+
+midway_authenticated() {
+    MWAUTHED=$(mcurl --silent --show-error https://midway-auth.amazon.com/api/session-status | jq '.authenticated')
+    if [[ "false" == "$MWAUTHED" ]]; then
+        return false
+    else
+        return true
+    fi
 }
