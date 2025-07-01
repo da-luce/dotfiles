@@ -1,0 +1,163 @@
+{
+    "data/VUfq3EAdzro8": {
+        "input": "@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Gabarito:wght@400..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');"
+    },
+    "widget/bONbWiT9RG_Y": {
+        "id": "bONbWiT9RG_Y",
+        "key": "widget/time",
+        "order": 1,
+        "display": {
+            "position": "bottomRight",
+            "fontWeight": 700,
+            "fontFamily": "Libre Baskerville",
+            "colour": "#8c836e"
+        }
+    },
+    "widget/default-time": null,
+    "widget/default-greeting": null,
+    "locale": "en",
+    "timeZone": null,
+    "widget/pSrnXUjP8JUi": null,
+    "widget/fWJPVZZa1pRh": null,
+    "widget/zinLt5UUvxjb": null,
+    "widget/ymSIYnKji5S4": null,
+    "widget/8VcIUZZgXI4F": null,
+    "widget/xjQ9n3TvlMlk": null,
+    "widget/xlcsTTbT3yYv": null,
+    "widget/wvx7HEg40sA8": null,
+    "widget/Oa-fEmhlpHiD": null,
+    "widget/ePsINFLNU56c": null,
+    "widget/MhWH7nK9XYRg": null,
+    "widget/HdgHBHlf2PbS": null,
+    "widget/EGepTNjzD9M8": null,
+    "widget/Dc3nNb1nHvEw": null,
+    "widget/iViKpyrIjhl4": null,
+    "data/bONbWiT9RG_Y": {
+        "mode": "digital",
+        "hour12": false,
+        "showDate": false,
+        "showMinutes": true,
+        "showSeconds": false,
+        "showDayPeriod": true,
+        "timeZone": null,
+        "name": ""
+    },
+    "widget/1sCYCUqdZpXY": null,
+    "widget/ZoicNeDH03a9": null,
+    "widget/RsWk9QCk0Pf5": null,
+    "widget/RWMwLcfby3JS": null,
+    "widget/rYT-8dJm_oVa": null,
+    "widget/FUINzB1KVrve": null,
+    "widget/72gxwPKMO0ze": null,
+    "widget/c2Hlv856pOz1": null,
+    "widget/M86siUsWaDWC": null,
+    "widget/G_7egzvDEGaY": null,
+    "widget/BDh3tSiGGLUy": null,
+    "focus": false,
+    "widget/NEFySAiov4dq": null,
+    "widget/fKkWqDVYCQAX": null,
+    "widget/EkfejPWWOLyU": null,
+    "widget/E-yzT17Y5tRd": null,
+    "widget/Pb4FG3LoonK1": null,
+    "widget/w3lb8kU-SDn1": null,
+    "widget/ItK_-kY6k6Bz": null,
+    "widget/43T4fh85AUQp": null,
+    "widget/5ib9gF2o9k1L": null,
+    "widget/BEoxuVDgFevp": null,
+    "widget/yFQWiNnFbq41": null,
+    "widget/6e_FE8fofr-F": null,
+    "data/-JR5Vr9b8MEC": {
+        "columns": 5,
+        "links": [
+            {
+                "url": "https://mail.google.com",
+                "name": "",
+                "icon": "mail"
+            },
+            {
+                "url": "https://calendar.google.com",
+                "name": "",
+                "icon": "calendar"
+            },
+            {
+                "url": "https://drive.google.com",
+                "name": "",
+                "icon": "hard-drive"
+            },
+            {
+                "url": "https://canvas.cornell.edu/",
+                "icon": "compass",
+                "name": ""
+            },
+            {
+                "url": "https://github.com",
+                "icon": "github",
+                "name": ""
+            }
+        ],
+        "visible": true,
+        "linkOpenStyle": false
+    },
+    "data/SP3P7TX7rpCK": {
+        "showDetails": false,
+        "units": "us",
+        "latitude": 34.0522,
+        "longitude": -118.2437,
+        "name": "los angeles"
+    },
+    "widget/1vL40Mr-KL7k": null,
+    "widget/uT2nTTXkQKuB": null,
+    "widget/BqKURCTRCll8": null,
+    "widget/pYyG08y1cThM": null,
+    "widget/zCtrvWXnwPkj": null,
+    "widget/lK3CaWQMhoXD": null,
+    "widget/ydwJqqOf-zaA": null,
+    "widget/KDQI5C611aD4": null,
+    "widget/qFX-cpy0rS6g": null,
+    "widget/SP3P7TX7rpCK": {
+        "id": "SP3P7TX7rpCK",
+        "key": "widget/weather",
+        "order": 0,
+        "display": {
+            "position": "bottomRight",
+            "fontFamily": "Libre Baskerville",
+            "fontSize": 20,
+            "colour": "#8c836e"
+        }
+    },
+    "widget/VUfq3EAdzro8": {
+        "id": "VUfq3EAdzro8",
+        "key": "widget/css",
+        "order": 4,
+        "display": {
+            "position": "middleCentre"
+        }
+    },
+    "widget/n0DcUcQifuMB": null,
+    "widget/BwG5WjFemNb7": null,
+    "widget/1DIWe1D4BjQg": null,
+    "data/Ra8nejKAVE27": {
+        "colour": "#eee7d5"
+    },
+    "background": {
+        "id": "Ra8nejKAVE27",
+        "key": "background/colour",
+        "display": {
+            "blur": 0,
+            "luminosity": -0.2
+        }
+    },
+    "widget/-JR5Vr9b8MEC": {
+        "id": "-JR5Vr9b8MEC",
+        "key": "widget/links",
+        "order": 3,
+        "display": {
+            "position": "bottomRight",
+            "colour": "#8c836e",
+            "fontWeight": 400,
+            "fontSize": 20,
+            "fontFamily": "Barlow"
+        }
+    },
+    "version": 3
+}
