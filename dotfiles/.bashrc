@@ -5,6 +5,9 @@
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
+# Source generic rc file
+source "$HOME/.rc"
+
 # Bash specifc stuff
 
 # don't put duplicate lines or lines starting with space in the history
@@ -36,9 +39,3 @@ reload() {
   echo "🔄 Reloading ~/.bashrc"
   source ~/.bashrc
 }
-
-# Source generic rc file
-if [ -f "$HOME/.shell/rc" ]; then
-    . "$HOME/.shell/rc"
-fi
-. "$HOME/.cargo/env"
