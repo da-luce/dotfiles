@@ -1,0 +1,81 @@
+#!/bin/sh
+
+# General .rc file for interactive shells
+
+# For Xquartz
+if command -v xhost &> /dev/null
+then
+  xhost +localhost
+fi
+
+# fancy prompt with starship
+eval "$(starship init "$SHELL")"
+
+# go test with color
+gotestc() {
+  go test "$@" | \
+  sed "/PASS/s//$(printf '\033[32mPASS\033[0m')/" | \
+  sed "/FAIL/s//$(printf '\033[31mFAIL\033[0m')/"
+}
+
+# Path
+PATH=$(getconf PATH);
+
+PATH="/usr/local/anaconda3/bin:$PATH"           # anaconda
+PATH="/opt/homebrew/anaconda3/bin:$PATH"
+PATH="/usr/local/bin:$PATH"         # ???
+PATH="/opt/homebrew/bin:$PATH"      # homebrew executable
+PATH="/Library/TeX/texbin:$PATH"    # LaTeX bins
+
+export PATH
+
+# Source
+
+safe_source() {
+    # Check if a file path is provided
+    if [ -z "$1" ]; then
+        echo "Usage: safe_source <file_path>"
+        return 1
+    fi
+
+    # Store the file path
+    local file="$1"
+
+    # Check if file exists and is readable
+    if [ -f "$file" ] && [ -r "$file" ]; then
+        # Source the file
+        . "$file"
+        return 0
+    else
+        # Optional: Comment out the echo if you don't want error messages
+        echo "Warning: Cannot source '$file' (file not found or not readable)"
+        return 1
+    fi
+}
+
+safe_source "/opt/homebrew/etc/profile.d/autojump.sh"
+safe_source "$HOME/.cargo/env"
+
+# Alias
+alias la='ls -la --color=auto'
+alias ls='ls -l --color=auto'
+alias f=fzf --preview='head -$LINES {}'
+alias ..='cd ..'
+alias ...='cd ../../'
+alias ....='cd ../../../'
+alias .....='cd ../../../../'
+alias ece='source $HOME/.dotfiles/scripts/ece.sh; connect'
+alias vpn='source $HOME/.dotfiles/scripts/ece.sh; connect_to_vpn'
+alias pdf='pandoc -f markdown-implicit_figures --columns=80 --wrap=auto -o'
+alias stat='git status'
+alias com='git commit -m'
+alias dot='cd $HOME/.dotfiles'
+alias v='nvim'
+alias nav='docker-compose run --rm nav'
+alias autobike='docker run -it --rm -v "$(pwd):/usr/app" --user root --env DISPLAY=host.docker.internal:0 autobike'
+
+case "$(hostname)" in
+    *c889f3b49f48*)
+        safe_source $HOME/.rc_amazon
+        ;;
+esac

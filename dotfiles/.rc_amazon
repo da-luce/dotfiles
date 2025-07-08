@@ -1,0 +1,6 @@
+# Shell configuration for Amazon
+
+# Append to PATH, don't reset it
+PATH="$PATH:$HOME/.toolbox/bin"
+
+export PATH

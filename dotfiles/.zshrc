@@ -2,11 +2,9 @@
 
 # zsh: default shell for Mac OSX
 
+# Source generic rc file
+source "$HOME/.rc"
+
 reload() {
   source ~/.zshrc
 }
-
-# Source generic rc file
-if [ -f "$HOME/.shell/rc" ]; then
-    . "$HOME/.shell/rc"
-fi
