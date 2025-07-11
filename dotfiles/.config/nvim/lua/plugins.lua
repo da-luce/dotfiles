@@ -25,13 +25,21 @@ require("lazy").setup({
         lazy = false,
         config = function()
             vim.g.everforest_background = 'hard'
-            vim.cmd([[colorscheme tokyonight-night]])
+        end,
+    },
+    {
+        'sainnhe/gruvbox-material',
+        pin = true,
+        config = function()
+            vim.g.gruvbox_material_background = 'medium'
+            vim.cmd.colorscheme('gruvbox-material')
         end,
     },
 
     -- Tetris game
     {
         "alec-gibson/nvim-tetris",
+        pin = true,
     },
 
     -- LSP
@@ -115,6 +123,7 @@ require("lazy").setup({
     {
         'nvim-lualine/lualine.nvim',
         pin = true,
+        dependencies = { 'sainnhe/gruvbox-material' },
         config = function()
             require("config.lualine")
         end
@@ -179,6 +188,7 @@ require("lazy").setup({
 
     {
         "iamcco/markdown-preview.nvim",
+        pin = true,
         cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
         ft = { "markdown" },
         build = function() vim.fn["mkdp#util#install"]() end,

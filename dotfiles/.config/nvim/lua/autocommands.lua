@@ -67,3 +67,26 @@ vim.api.nvim_create_autocmd(
     }
 )
 ]] 
+
+-- Tmux status toggle based on Vim/Neovim state
+if vim.env.TMUX then
+  local tmux_group = vim.api.nvim_create_augroup("TmuxStatus", { clear = true })
+  
+  local tmux_events = {
+    "VimResume",
+    "VimEnter",
+    "VimLeave",
+    "VimSuspend"
+  }
+
+  for _, event in ipairs(tmux_events) do
+    vim.api.nvim_create_autocmd(event, {
+      group = tmux_group,
+      callback = function()
+        -- Set status off for Resume and Enter, on for Leave and Suspend
+        local status = (event == "VimResume" or event == "VimEnter") and "off" or "on"
+        vim.fn.system(string.format("tmux set status %s", status))
+      end,
+    })
+  end
+end

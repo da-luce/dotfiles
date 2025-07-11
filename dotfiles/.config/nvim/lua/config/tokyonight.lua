@@ -11,6 +11,3 @@ require("tokyonight").setup({
   end
   
 })
-
--- Weird place to put this but ok
-vim.api.nvim_command("colorscheme tokyonight-night")
