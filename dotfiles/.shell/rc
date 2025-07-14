@@ -34,6 +34,33 @@ gotestc() {
   sed "/FAIL/s//$(printf '\033[31mFAIL\033[0m')/"
 }
 
-if command -v tmux >/dev/null 2>&1 && [ -z "$TMUX" ] && [ -t 1 ]; then
+whereami() {
+  echo "User        : $(whoami)"
+  echo "Host        : $(hostname)"
+  echo "OS          : $(uname -srm)"
+  echo "Shell       : $SHELL"
+  echo "Terminal    : $TERM"
+  echo "Date        : $(date)"
+  echo "Directory   : $(pwd)"
+}
+
+# Detect if in VS Code
+in_vscode=false
+if [ "$TERM_PROGRAM" = "vscode" ] || [ -n "$VSCODE_PID" ]; then
+  in_vscode=true
+fi
+
+# Detect if in Vim or Neovim
+in_vim=false
+if [ -n "$VIM" ] || [ -n "$NVIM_LISTEN_ADDRESS" ]; then
+  in_vim=true
+fi
+
+# Only auto-start tmux if not in tmux, VS Code, or Vim
+if command -v tmux >/dev/null 2>&1 \
+  && [ -z "$TMUX" ] \
+  && [ -t 1 ] \
+  && [ "$in_vscode" = false ] \
+  && [ "$in_vim" = false ]; then
   exec tmux
 fi
