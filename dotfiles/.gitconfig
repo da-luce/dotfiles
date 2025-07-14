@@ -1,3 +1,7 @@
 [user]
 	email = daltonluce42@gmail.com
 	name = Dalton Luce
+
+[core]
+	editor = vim
+	autocrlf = false
