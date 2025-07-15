@@ -1,7 +1,7 @@
 #!/bin/sh
 
-alias la='ls -la --color=auto'
-alias ls='ls -l --color=auto'
+alias l='eza -l --no-permissions --no-user --no-filesize'
+alias la='eza -l'
 
 alias f=fzf --preview='head -$LINES {}'
 

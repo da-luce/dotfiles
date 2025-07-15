@@ -18,6 +18,11 @@ if [ -f "$HOME/.shell/source" ]; then
     . "$HOME/.shell/source"
 fi
 
+# Source fzf config 
+if [ -f "$XDG_CONFIG_HOME/fzf/fzf_config.sh" ]; then
+    . "$XDG_CONFIG_HOME/fzf/fzf_config.sh"
+fi
+
 # For Xquartz
 if command -v xhost &> /dev/null
 then
