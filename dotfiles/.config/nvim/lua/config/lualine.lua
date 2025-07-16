@@ -1,5 +1,10 @@
 local function get_color(group, attr)
-    return vim.fn.synIDattr(vim.fn.synIDtrans(vim.fn.hlID(group)), attr)
+    local hl = vim.api.nvim_get_hl_by_name(group, true)
+    if attr == "fg#" then
+        return string.format("#%06x", hl.foreground)
+    elseif attr == "bg#" then
+        return string.format("#%06x", hl.background)
+    end
 end
 
 require 'lualine'.setup {
