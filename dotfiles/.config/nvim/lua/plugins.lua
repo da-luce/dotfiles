@@ -36,9 +36,17 @@ require("lazy").setup({
         end,
     },
 
-    -- Tetris game
+    -- Games
     {
         "alec-gibson/nvim-tetris",
+        pin = true,
+    },
+    {
+        "Eandrju/cellular-automaton.nvim",
+        pin = true,
+    },
+    {
+        "alanfortlink/blackjack.nvim",
         pin = true,
     },
 
