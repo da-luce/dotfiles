@@ -33,12 +33,28 @@ vim.keymap.set("v", "<", "<gv", opts)
 vim.keymap.set("v", ">", ">gv", opts)
 
 -- Telescope
-local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>ff', builtin.find_files, {desc = "Telescope find files"})
-vim.keymap.set('n', '<leader>fg', builtin.live_grep, {desc = "Telescope live grep"})
-vim.keymap.set('n', '<leader>fb', builtin.buffers, {desc = "Telescope buffers"})
-vim.keymap.set('n', '<leader>fh', builtin.help_tags, {desc = "Telescope help tags"})
-vim.keymap.set("n", "<leader>fs", ":Telescope file_browser<CR>", {desc = "Telescope file browser"})
+local function telescope_builtin(fn)
+    return function()
+        local ok, builtin = pcall(require, "telescope.builtin")
+        if not ok then
+            vim.notify("Telescope not available", vim.log.levels.WARN)
+            return
+        end
+        builtin[fn]()
+    end
+end
+
+vim.keymap.set('n', '<leader>ff', telescope_builtin("find_files"), { desc = "Telescope find files" })
+vim.keymap.set('n', '<leader>fg', telescope_builtin("live_grep"), { desc = "Telescope live grep" })
+vim.keymap.set('n', '<leader>fb', telescope_builtin("buffers"), { desc = "Telescope buffers" })
+vim.keymap.set('n', '<leader>fh', telescope_builtin("help_tags"), { desc = "Telescope help tags" })
+
+vim.keymap.set("n", "<leader>fs", function()
+    local ok = pcall(vim.cmd, "Telescope file_browser")
+    if not ok then
+        vim.notify("Telescope file_browser not available", vim.log.levels.WARN)
+    end
+end, { desc = "Telescope file browser" })
 
 -- LSP
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, {desc = "Open diagnostic float"})

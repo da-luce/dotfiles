@@ -1,10 +1,14 @@
 local function get_color(group, attr)
-    local hl = vim.api.nvim_get_hl_by_name(group, true)
-    if attr == "fg#" then
-        return string.format("#%06x", hl.foreground)
-    elseif attr == "bg#" then
-        return string.format("#%06x", hl.background)
+    -- attr should be "fg" or "bg"
+    local hl = vim.api.nvim_get_hl(0, { name = group, link = false })
+    local color = hl[attr]
+    
+    if not color then
+        return nil
     end
+
+    -- nvim_get_hl returns a decimal number, so we convert it to a hex string for Lualine
+    return string.format("#%06x", color)
 end
 
 require 'lualine'.setup {
