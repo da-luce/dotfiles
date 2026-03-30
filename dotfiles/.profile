@@ -39,3 +39,8 @@ fi
 # opam configuration
 test -r /Users/sixsa/.opam/opam-init/init.sh && . /Users/sixsa/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
 . "$HOME/.cargo/env"
+
+export NVM_DIR="$HOME/.nvm"
+    [ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" # This loads nvm
+    [ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion
+

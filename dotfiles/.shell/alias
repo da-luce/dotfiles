@@ -3,6 +3,8 @@
 alias l='eza -l --no-permissions --no-user --no-filesize'
 alias la='eza -l'
 
+alias rv='docker run -i --rm -v "$PWD":/root ghcr.io/shouxulin/cs4414hw1'
+
 alias f=fzf --preview='head -$LINES {}'
 
 alias ..='cd ..'
@@ -19,6 +21,8 @@ alias stat='git status'
 alias com='git commit -m'
 
 alias dot='cd $HOME/.dotfiles'
+
+alias lab='/opt/homebrew/opt/jupyterlab/bin/jupyter-lab'
 
 alias v='nvim'
 
