@@ -34,4 +34,7 @@ case $OS in
         ;;
 esac
 
+# Add after go added to path
+PATH="$(go env GOPATH)/bin:$PATH"
+
 export PATH;

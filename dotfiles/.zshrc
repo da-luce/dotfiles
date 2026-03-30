@@ -10,3 +10,4 @@ reload() {
 if [ -f "$HOME/.shell/rc" ]; then
     . "$HOME/.shell/rc"
 fi
+

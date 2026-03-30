@@ -70,10 +70,13 @@ vpn_connected() {
 }
 
 connect_to_vpn() {
+    # Prompt for password securely (no echo)
+    read -s -p "Enter VPN password: " VPN_PASSWORD
+    echo
 
     # WARNING: Don't connect if already connected to VPN: stuff gets wonky
 
-    # Generate secureclient.txt file dynamically using secretss
+    # Generate secureclient.txt file dynamically
     cat <<EOF > ./secureclient.txt
 connect $VPN_HOST
 $VPN_USERNAME
@@ -91,12 +94,11 @@ EOF
 
     # For security
     rm ./secureclient.txt
+    unset VPN_PASSWORD  # clear from memory
 
-    # Accept push!
-
-    # Return the captured return code
     return $ret_code
 }
+
 
 # Main script logic
 connect() {
