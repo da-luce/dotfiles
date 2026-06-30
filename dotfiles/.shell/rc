@@ -73,11 +73,13 @@ if [ -n "$VIM" ] || [ -n "$NVIM_LISTEN_ADDRESS" ]; then
   in_vim=true
 fi
 
-# Only auto-start tmux if not in tmux, VS Code, or Vim
+# Only auto-start tmux if not in tmux, VS Code, or Vim.
+# No `exec`: tmux runs as a child, so detaching (prefix d) or exiting drops
+# back to a bare shell in the same window instead of closing it.
 if command -v tmux >/dev/null 2>&1 \
   && [ -z "$TMUX" ] \
   && [ -t 1 ] \
   && [ "$in_vscode" = false ] \
   && [ "$in_vim" = false ]; then
-  exec tmux
+  tmux
 fi
