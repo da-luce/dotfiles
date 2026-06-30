@@ -49,6 +49,8 @@ case $OS in
     # Mac OSX
     darwin*)
         alias vm="multipass"
+        # Connect to Arca and attach the shared 'main' tmux session (create if absent)
+        alias arcat='arca et -- tmux new-session -A -s main'
         ;;
 
     # Cygwin
