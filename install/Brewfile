@@ -19,6 +19,7 @@ brew "python@3.12"
 brew "rust"
 brew "rustup"
 brew "neovim"
+brew "nowplaying-cli" # sketchybar media island (system Now Playing)
 brew "ripgrep"
 brew "wget"
 brew "stow"

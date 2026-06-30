@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
-# Now playing via AppleScript (Spotify / Music) with album art + a DIY ping-pong
-# marquee for long titles (native label scrolling is broken in this build).
-# Art is refetched only when the track changes.
+# Now playing via macOS MediaRemote (nowplaying-cli) — works for any app that
+# publishes Now Playing info: Spotify, Music, and browsers (YouTube, etc.).
+# Album art is decoded from the framework's artwork data and refetched only
+# when the track changes. Long titles use a DIY ping-pong marquee (native
+# label scrolling is broken in this build).
 
 source "$HOME/.config/sketchybar/colors.sh"
 
@@ -11,23 +13,18 @@ IDFILE=/tmp/sketchybar_media_track
 MPID=/tmp/sketchybar_marquee.pid
 MTTL=/tmp/sketchybar_marquee.title
 W=20   # keep in sync with media_marquee.sh
+NP="$(command -v nowplaying-cli || echo /opt/homebrew/bin/nowplaying-cli)"
 
 marquee_alive() { [ -f "$MPID" ] && kill -0 "$(cat "$MPID" 2>/dev/null)" 2>/dev/null; }
 stop_marquee() { marquee_alive && kill "$(cat "$MPID")" 2>/dev/null; rm -f "$MPID" "$MTTL"; }
 
-player=""
-state=""
-for app in Spotify Music; do
-  if pgrep -xq "$app"; then
-    s=$(osascript -e "tell application \"$app\" to player state as string" 2>/dev/null)
-    if [ "$s" = "playing" ] || [ "$s" = "paused" ]; then
-      player="$app"; state="$s"; break
-    fi
-  fi
-done
+# One framework query for the lot (bash 3.2: no mapfile). Each field is a line.
+{ read -r TITLE; read -r ARTIST; read -r RATE; } \
+  < <("$NP" get title artist playbackRate 2>/dev/null)
+[ "$TITLE" = "null" ] && TITLE=""
 
-# Nothing playing/paused -> hide everything, collapse its gap, stop scrolling
-if [ -z "$player" ]; then
+# Nothing registered -> hide everything, collapse its gap, stop scrolling
+if [ -z "$TITLE" ]; then
   stop_marquee
   sketchybar --set media drawing=off
   sketchybar --set media_cover drawing=off background.image.drawing=off
@@ -39,22 +36,23 @@ fi
 # Media is showing -> restore its leading gap
 sketchybar --set sep_media width="$GAP"
 
-if [ "$state" = "playing" ]; then ICON="󰏤"; COLOR=$GREEN; else ICON="󰐊"; COLOR=$GREY; fi
+# playbackRate: >0 playing, 0/empty paused
+if [ -n "$RATE" ] && [ "$RATE" != "0" ] && [ "$RATE" != "null" ]; then
+  ICON="󰏤"; COLOR=$GREEN
+else
+  ICON="󰐊"; COLOR=$GREY
+fi
 
-TRACK=$(osascript -e "tell application \"$player\" to name of current track" 2>/dev/null)
-ARTIST=$(osascript -e "tell application \"$player\" to artist of current track" 2>/dev/null)
-LABEL="$TRACK"
-[ -n "$ARTIST" ] && LABEL="$ARTIST – $TRACK"
+LABEL="$TITLE"
+[ -n "$ARTIST" ] && [ "$ARTIST" != "null" ] && LABEL="$ARTIST – $TITLE"
 
 sketchybar --set media drawing=on icon="$ICON" icon.color="$COLOR"
 
 # --- Scrolling label ---
 if [ "${#LABEL}" -le "$W" ]; then
-  # short: compact, auto-width, no scroll
   stop_marquee
   sketchybar --set media label.width=0 label="$LABEL"
 else
-  # long: fixed-width box (no jitter) + ping-pong marquee
   sketchybar --set media label.width=170
   if ! marquee_alive || [ "$LABEL" != "$(cat "$MTTL" 2>/dev/null)" ]; then
     stop_marquee
@@ -65,28 +63,11 @@ else
 fi
 
 # --- Album art (refetch only when the track changes) ---
-TID=$(osascript -e "tell application \"$player\" to id of current track" 2>/dev/null)
-[ -z "$TID" ] && TID="$LABEL"
-
+TID="$LABEL"
 if [ "$TID" != "$(cat "$IDFILE" 2>/dev/null)" ]; then
   echo "$TID" >"$IDFILE"
   rm -f "$SRC"
-  if [ "$player" = "Spotify" ]; then
-    url=$(osascript -e 'tell application "Spotify" to artwork url of current track' 2>/dev/null)
-    [[ "$url" == http* ]] && curl -fsL "$url" -o "$SRC" 2>/dev/null
-  else
-    osascript >/dev/null 2>&1 <<'OSA'
-tell application "Music"
-  if exists current track then
-    set d to data of artwork 1 of current track
-    set f to open for access (POSIX file "/tmp/sb_cover_src") with write permission
-    set eof f to 0
-    write d to f
-    close access f
-  end if
-end tell
-OSA
-  fi
+  "$NP" get artworkData 2>/dev/null | base64 -D >"$SRC" 2>/dev/null
   if [ -s "$SRC" ] && sips -s format png -z 60 60 "$SRC" -o "$COVER" >/dev/null 2>&1; then
     :
   else
