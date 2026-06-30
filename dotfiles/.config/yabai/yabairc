@@ -45,6 +45,11 @@ yabai -m config                                 \
     mouse_action2                resize         \
     mouse_drop_action            swap
 
+# window rules
+# Chrome Picture-in-Picture reports subrole AXStandardWindow, so yabai tiles it
+# by default and reflows the layout. Force it unmanaged so it floats freely.
+yabai -m rule --add app="^Google Chrome$" title="^Picture in Picture$" manage=off
+
 # Tell SketchyBar to re-evaluate which spaces are non-empty
 yabai -m signal --add event=window_created      action="sketchybar --trigger space_windows" &
 yabai -m signal --add event=window_destroyed    action="sketchybar --trigger space_windows" &
