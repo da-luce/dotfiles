@@ -4,7 +4,7 @@
 
 options=(
   style=round               # rounded corners
-  width=5.0                 # border thickness in pixels
+  width=10.0                # border thickness in pixels
   hidpi=on                  # support HiDPI screens
   active_color=0xffe2e2e3   # active window border color (ARGB hex)
   inactive_color=0x00000000 # fully transparent for inactive windows
