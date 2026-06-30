@@ -181,3 +181,22 @@ ctrl + alt + cmd - left  : yabai -m window --display prev; yabai -m display --fo
 # Shift focus to the next or previous monitor
 ctrl + alt + cmd - up   : yabai -m display --focus prev
 ctrl + alt + cmd - down : yabai -m display --focus next
+
+# 6. RESIZE (Shift+Option+Arrow)
+# Grow/shrink the focused window. The first command moves one edge; the
+# `||` fallback handles the case where that edge is the screen boundary
+# (e.g. the rightmost window) by moving the opposite edge instead.
+shift + alt - right : yabai -m window --resize right:50:0   || yabai -m window --resize left:-50:0
+shift + alt - left  : yabai -m window --resize right:-50:0  || yabai -m window --resize left:50:0
+shift + alt - down  : yabai -m window --resize bottom:0:50  || yabai -m window --resize top:0:-50
+shift + alt - up    : yabai -m window --resize bottom:0:-50 || yabai -m window --resize top:0:50
+
+# 7. REDISTRIBUTE / RESPLIT
+# Balance: equalize all splits so every window gets the same share.
+# (0x52 is the numpad 0, so it works from both the number row and the keypad.)
+shift + alt - 0    : yabai -m space --balance
+shift + alt - 0x52 : yabai -m space --balance
+# Toggle the split orientation of the focused window (vertical <-> horizontal).
+shift + alt - e : yabai -m window --toggle split
+# Rotate the whole layout tree 90 degrees.
+shift + alt - r : yabai -m space --rotate 90
