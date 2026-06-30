@@ -46,7 +46,7 @@ render_slot() { # $1 key  $2 state  $3 title  $4 artist  $5 cover_png
 
   if [ "$state" = playing ]; then
     label="$title"; [ -n "$artist" ] && label="$artist – $title"
-    sketchybar --set "med_$k" drawing=on icon="󰐊" icon.color="$GREEN"
+    sketchybar --set "med_$k" drawing=on icon="󰏤" icon.color="$GREEN"
     if [ "${#label}" -le "$W" ]; then
       stop_marquee "med_$k"
       sketchybar --set "med_$k" label.width=0 label="$label"
@@ -55,9 +55,9 @@ render_slot() { # $1 key  $2 state  $3 title  $4 artist  $5 cover_png
       start_marquee "med_$k" "$label"
     fi
   else
-    # paused -> art + pause glyph only, no track name
+    # paused -> art + play glyph only, no track name
     stop_marquee "med_$k"
-    sketchybar --set "med_$k" drawing=on icon="󰏤" icon.color="$GREY" label="" label.width=0
+    sketchybar --set "med_$k" drawing=on icon="󰐊" icon.color="$GREY" label="" label.width=0
   fi
 }
 
