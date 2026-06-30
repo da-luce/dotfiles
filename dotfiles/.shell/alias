@@ -5,7 +5,7 @@ alias la='eza -l'
 
 alias rv='docker run -i --rm -v "$PWD":/root ghcr.io/shouxulin/cs4414hw1'
 
-alias f=fzf --preview='head -$LINES {}'
+alias f='fzf --preview "head -\$LINES {}"'
 
 alias ..='cd ..'
 alias ...='cd ../../'

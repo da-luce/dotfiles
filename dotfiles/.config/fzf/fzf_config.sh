@@ -36,8 +36,8 @@ layout="$layout --prompt ' '"
 
 layout="$layout --style full"
 
-# Define preview options
-preview="--preview 'bat --style=numbers --color=always {}'"
+# Define preview options (fall back to cat if bat isn't installed)
+preview="--preview '(bat --style=numbers --color=always {} 2>/dev/null || cat {})'"
 # Configure the preview window position and size
 preview="$preview --preview-window right:60%:wrap"
 

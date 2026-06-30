@@ -5,8 +5,11 @@
 # If not running interactively, don't do anything
 case $- in
     *i*);;      # interactive
-    *) return;; # script 
+    *) return;; # script
 esac
+
+# Default XDG base dir (the fzf config below and other tools rely on it)
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 
 # Aliases (broken into own file as it has OS specific stuff)
 if [ -f "$HOME/.shell/alias" ]; then
@@ -18,9 +21,18 @@ if [ -f "$HOME/.shell/source" ]; then
     . "$HOME/.shell/source"
 fi
 
-# Source fzf config 
+# Source fzf config (theme/layout options)
 if [ -f "$XDG_CONFIG_HOME/fzf/fzf_config.sh" ]; then
     . "$XDG_CONFIG_HOME/fzf/fzf_config.sh"
+fi
+
+# fzf key bindings (CTRL-R / CTRL-T / ALT-C) + fuzzy completion
+if command -v fzf >/dev/null 2>&1; then
+    if [ -n "$ZSH_VERSION" ]; then
+        source <(fzf --zsh)
+    elif [ -n "$BASH_VERSION" ]; then
+        eval "$(fzf --bash)"
+    fi
 fi
 
 # For Xquartz
