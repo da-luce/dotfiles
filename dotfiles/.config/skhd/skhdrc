@@ -158,10 +158,10 @@ ctrl + alt - down  : yabai -m window --swap south || (yabai -m window --display 
 
 # FOCUS NAVIGATION (Seamless across monitors)
 # Same logic for just moving your cursor/focus without dragging a window
-alt - left  : yabai -m window --focus west || yabai -m display --focus west
-alt - right : yabai -m window --focus east || yabai -m display --focus east
-alt - up    : yabai -m window --focus north || yabai -m display --focus north
-alt - down  : yabai -m window --focus south || yabai -m display --focus south
+alt - left  : ~/.config/yabai/focus.sh west
+alt - right : ~/.config/yabai/focus.sh east
+alt - up    : ~/.config/yabai/focus.sh north
+alt - down  : ~/.config/yabai/focus.sh south
 
 # 3. MAXIMIZE / FULLSCREEN
 # Rectangle used Ctrl+Option+Enter to maximize. 
