@@ -7,14 +7,14 @@ PLUGIN_DIR="$CONFIG_DIR/plugins"
 
 ##### Bar #####
 sketchybar --bar \
-  height=32 \
+  height=38 \
   position=top \
   y_offset=6 \
   margin=10 \
   corner_radius=10 \
   blur_radius=30 \
   shadow=off \
-  color="$BAR_COLOR" \
+  color=0x00000000 \
   padding_left=8 \
   padding_right=8
 
@@ -24,8 +24,8 @@ default=(
   label.font="$FONT:Semibold:13.0"
   icon.color="$WHITE"
   label.color="$WHITE"
-  background.corner_radius=6
-  background.height=24
+  background.corner_radius=13
+  background.height=26
   padding_left=3
   padding_right=3
   icon.padding_left=8
@@ -55,35 +55,113 @@ for i in "${!SPACE_ICONS[@]}"; do
 done
 
 ##### Front app (left) #####
-sketchybar --add item separator left \
-           --set separator icon="" label.drawing=off \
-               icon.color="$GREY" icon.font="$FONT:Regular:16.0" \
-               padding_left=8 padding_right=8 \
-           --add item front_app left \
+sketchybar --add item front_app left \
            --set front_app icon.drawing=off \
+               label.padding_left=10 \
                label.font="$FONT:ExtraBold:13.0" \
                label.color="$ACCENT" \
                script="$PLUGIN_DIR/front_app.sh" \
            --subscribe front_app front_app_switched
 
-##### Right side #####
+##### Now playing (album art + play/pause + track; left of center, avoids notch) #####
+# spacer: gap before the now-playing island (collapsed by media.sh when hidden)
+sketchybar --add item sep_media left \
+           --set sep_media width="$GAP" icon.drawing=off label.drawing=off background.drawing=off
+
+sketchybar --add item media_cover left \
+           --set media_cover drawing=off \
+               icon.drawing=off label.drawing=off \
+               background.color=0x00000000 \
+               background.height=30 \
+               background.image.scale=0.35 \
+               background.image.corner_radius=5 \
+               background.image.drawing=off \
+               padding_left=10 padding_right=2 \
+               click_script="$PLUGIN_DIR/media_click.sh"
+
+sketchybar --add item media left \
+           --set media drawing=off update_freq=5 \
+               icon="󰝚" icon.color="$GREEN" \
+               label.width=170 \
+               script="$PLUGIN_DIR/media.sh" \
+               click_script="$PLUGIN_DIR/media_click.sh"
+
+# Bracket the cover + track text into one pill
+sketchybar --add bracket media_island media_cover media \
+           --set media_island background.color="$ISLAND" \
+               background.border_width=1 background.border_color="$BORDER" \
+               background.corner_radius=17 background.height=34
+
+##### Next meeting (left of center, its own island) #####
+# spacer: gap before the calendar island
+sketchybar --add item sep_cal left \
+           --set sep_cal width="$GAP" icon.drawing=off label.drawing=off background.drawing=off
+
+sketchybar --add item calendar left \
+           --set calendar drawing=off update_freq=60 \
+               padding_left=0 \
+               icon="󰃭" icon.color="$MAGENTA" \
+               label.max_chars=34 \
+               background.color="$ISLAND" \
+               background.border_width=1 background.border_color="$BORDER" \
+               background.corner_radius=17 background.height=34 \
+               script="$PLUGIN_DIR/calendar.sh" \
+               click_script="open -a Calendar"
+
+##### Right side (visual order L->R: cpu wifi volume battery clock) #####
 sketchybar --add item clock right \
            --set clock update_freq=10 \
-               icon="" icon.color="$MAGENTA" \
+               icon="󰥔" icon.color="$MAGENTA" \
                script="$PLUGIN_DIR/clock.sh" \
-           --add item volume right \
-           --set volume icon.color="$CYAN" \
-               script="$PLUGIN_DIR/volume.sh" \
-           --subscribe volume volume_change \
+               click_script="open -a Calendar" \
            --add item battery right \
            --set battery update_freq=120 \
                script="$PLUGIN_DIR/battery.sh" \
-           --subscribe battery system_woke power_source_change
+               popup.align=center popup.height=24 \
+               popup.background.color="$BAR_COLOR" \
+               popup.background.corner_radius=10 \
+               popup.background.border_width=1 \
+               popup.background.border_color="$SURFACE" \
+               click_script="sketchybar --set battery popup.drawing=toggle" \
+           --subscribe battery system_woke power_source_change \
+           --add item battery.detail popup.battery \
+           --set battery.detail icon.drawing=off label="" \
+               label.font="$FONT:Semibold:12.0" \
+           --add item volume right \
+           --set volume icon.color="$CYAN" \
+               script="$PLUGIN_DIR/volume.sh" \
+           --subscribe volume volume_change mouse.clicked mouse.scrolled \
+           --add item wifi right \
+           --set wifi update_freq=15 \
+               script="$PLUGIN_DIR/wifi.sh" \
+               click_script="$PLUGIN_DIR/wifi_click.sh" \
+           --add item cpu right \
+           --set cpu update_freq=5 \
+               script="$PLUGIN_DIR/cpu.sh"
 
-# Group the right-side status items into one pill
-sketchybar --add bracket status clock volume battery \
-           --set status background.color="$SURFACE" \
-               background.corner_radius=6 background.height=24
+# Left island: spaces + front app
+sketchybar --add bracket left_island '/space\..*/' front_app \
+           --set left_island background.color="$ISLAND" \
+               background.border_width=1 background.border_color="$BORDER" \
+               background.corner_radius=17 background.height=34
+
+# Right island: cpu + wifi + volume + battery + clock
+sketchybar --add bracket right_island cpu wifi volume battery clock \
+           --set right_island background.color="$ISLAND" \
+               background.border_width=1 background.border_color="$BORDER" \
+               background.corner_radius=17 background.height=34
+
+# Invisible driver: hide empty spaces (fed by yabai signals -> space_windows event)
+sketchybar --add event space_windows
+sketchybar --add item space_manager left \
+           --set space_manager drawing=off \
+               script="$PLUGIN_DIR/space_windows.sh" \
+           --subscribe space_manager space_windows space_change front_app_switched
+
+# Invisible driver: flash the calendar pill when a meeting is <= 5 min away
+sketchybar --add item calendar_flash right \
+           --set calendar_flash drawing=off update_freq=1 \
+               script="$PLUGIN_DIR/calendar_flash.sh"
 
 # Invisible watcher: reload only when macOS light/dark mode changes
 sketchybar --add item theme_watcher right \
@@ -91,3 +169,5 @@ sketchybar --add item theme_watcher right \
                script="$PLUGIN_DIR/theme.sh"
 
 sketchybar --update
+# Populate space visibility on load
+"$PLUGIN_DIR/space_windows.sh"

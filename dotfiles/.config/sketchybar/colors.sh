@@ -2,6 +2,10 @@
 # Monokai Pro palette (0xAARRGGBB), auto-adapting to macOS appearance.
 # AppleInterfaceStyle is set only in dark mode; absent/erroring means light.
 
+# Gap (px) between islands. Single source of truth — used by the spacer items in
+# sketchybarrc and collapsed per-pill in media.sh when a pill is hidden.
+export GAP=12
+
 if defaults read -g AppleInterfaceStyle >/dev/null 2>&1; then
   ### Monokai Pro (Spectrum) — dark ###
   export BAR_COLOR=0xe62d2a2e   # bar background
@@ -14,6 +18,8 @@ if defaults read -g AppleInterfaceStyle >/dev/null 2>&1; then
   export GREEN=0xffa9dc76
   export YELLOW=0xffffd866
   export RED=0xffff6188
+  export BORDER=0x40ffffff      # subtle light edge on the pills
+  export ISLAND=0xe62d2a2e      # translucent island fill (~90% alpha)
 else
   ### Monokai Pro (Light Sun) — light ###
   export BAR_COLOR=0xe6faf4ee   # bar background
@@ -26,4 +32,6 @@ else
   export GREEN=0xff218871
   export YELLOW=0xffa1851f
   export RED=0xffce4770
+  export BORDER=0x33000000      # subtle dark edge on the pills
+  export ISLAND=0xe6faf4ee      # translucent island fill (~90% alpha)
 fi
