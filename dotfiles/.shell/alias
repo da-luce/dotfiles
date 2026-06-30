@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Used by the OS-specific case below.
+OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
+KERNEL="$(uname -r | tr '[:upper:]' '[:lower:]')"
+
 alias l='eza -l --no-permissions --no-user --no-filesize'
 alias la='eza -l'
 
