@@ -63,34 +63,35 @@ sketchybar --add item front_app left \
                script="$PLUGIN_DIR/front_app.sh" \
            --subscribe front_app front_app_switched
 
-##### Now playing (album art + play/pause + track; left of center, avoids notch) #####
-# spacer: gap before the now-playing island (collapsed by media.sh when hidden)
-sketchybar --add item sep_media left \
-           --set sep_media width="$GAP" icon.drawing=off label.drawing=off background.drawing=off
-
-sketchybar --add item media_cover left \
-           --set media_cover drawing=off \
-               icon.drawing=off label.drawing=off \
-               background.color=0x00000000 \
-               background.height=30 \
-               background.image.scale=0.35 \
-               background.image.corner_radius=5 \
-               background.image.drawing=off \
-               padding_left=10 padding_right=2 \
-               click_script="$PLUGIN_DIR/media_click.sh"
-
+##### Now playing — one pill per active source (Spotify / Music / browser) #####
+# Hidden driver: media.sh fills/hides the per-source slots created below.
 sketchybar --add item media left \
-           --set media drawing=off update_freq=5 \
-               icon="󰝚" icon.color="$GREEN" \
-               label.width=170 \
-               script="$PLUGIN_DIR/media.sh" \
-               click_script="$PLUGIN_DIR/media_click.sh"
+           --set media drawing=off update_freq=5 script="$PLUGIN_DIR/media.sh"
 
-# Bracket the cover + track text into one pill
-sketchybar --add bracket media_island media_cover media \
-           --set media_island background.color="$ISLAND" \
-               background.border_width=1 background.border_color="$BORDER" \
-               background.corner_radius=17 background.height=34
+# Each source gets its own pill: leading gap + album art + icon/track, bracketed.
+# media.sh shows/hides these and collapses the gap of inactive sources.
+add_media_slot() { # $1 = source key (sp|mu|br)
+  local k="$1"
+  sketchybar --add item "sep_med_$k" left \
+             --set "sep_med_$k" width=0 icon.drawing=off label.drawing=off background.drawing=off
+  sketchybar --add item "cov_$k" left \
+             --set "cov_$k" drawing=off icon.drawing=off label.drawing=off \
+                 background.color=0x00000000 background.height=30 \
+                 background.image.scale=0.35 background.image.corner_radius=5 \
+                 background.image.drawing=off \
+                 padding_left=10 padding_right=2 \
+                 click_script="$PLUGIN_DIR/media_click.sh $k"
+  sketchybar --add item "med_$k" left \
+             --set "med_$k" drawing=off icon.color="$GREEN" label.width=170 \
+                 click_script="$PLUGIN_DIR/media_click.sh $k"
+  sketchybar --add bracket "isl_$k" "cov_$k" "med_$k" \
+             --set "isl_$k" background.color="$ISLAND" \
+                 background.border_width=1 background.border_color="$BORDER" \
+                 background.corner_radius=17 background.height=34
+}
+add_media_slot sp
+add_media_slot mu
+add_media_slot br
 
 ##### Next meeting (left of center, its own island) #####
 # spacer: gap before the calendar island
