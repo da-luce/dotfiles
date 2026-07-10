@@ -22,10 +22,14 @@ resurrect_dir="${XDG_DATA_HOME:-$HOME/.local/share}/tmux/resurrect"
 last="$resurrect_dir/last"
 [ -e "$last" ] || exit 0
 
-# Give the assistant replay a moment to send its `cd` lines first, so our
-# re-assert lands last and wins.
-sleep 2
-
+# This runs FIRST in the post-restore-all hook, BEFORE tmux-assistant-resurrect
+# replays `cd <cwd>; <resume>` into panes (see the hook composition in tmux.conf).
+# resurrect's core restore — which may have left automatic-rename in a state that
+# the imminent replayed `cd` would act on — has already completed synchronously by
+# now. By locking automatic-rename off here, before any cd is typed, no
+# command-driven rename can fire afterward. So a single pass is sufficient and
+# race-free: there is no async command in flight to lose a timing race against.
+#
 # Window line format (tab-separated), see tmux-resurrect save.sh:
 #   window <session> <index> <name> <active> <flags> <layout> <automatic_rename>
 # Fields carry a leading ':' quote char that must be stripped. automatic_rename
