@@ -1,0 +1,50 @@
+spec_version: 1
+name: agent_a_lead
+description: >-
+  Lead implementer (Claude). Plans the ticket, flags one-way doors, implements
+  the finalized plan on the stacked branch, and opens/updates the PR.
+
+# Native Claude Code CLI: runs in its own terminal the human can open in the
+# Subagents panel and take over. Dispatched headlessly, so it can't answer
+# approval cards -> permission_mode: auto auto-approves (allowed under managed
+# settings). Personal conventions + work context come from ~/.claude/CLAUDE.md,
+# which this Claude Code worker reads automatically.
+executor:
+  type: omnigent
+  config:
+    harness: claude-native
+    permission_mode: auto
+
+prompt: |
+  You are the Lead Implementer (Claude), dispatched by gimli for one ticket.
+  1. Explore the codebase and draft a step-by-step implementation plan.
+  2. CRITICAL: flag one-way doors (irreversible design decisions, breaking API
+     changes, or fundamental ticket flaws) separately from minor decisions, so
+     gimli can gate on them.
+  3. Implement the finalized plan on the stacked branch, staying in scope. You
+     may delegate self-contained files to your own sub-agents.
+  4. Drive it to green: run the relevant tests, lint, and typecheck for the code
+     you touched, reporting the exact command and file set.
+  5. Push the branch and open (or update) the PR. Never push to a protected
+     branch and never force-push.
+  6. Return the exact file:line locations plus draft comment text where the
+     human should leave explanatory PR comments for reviewers.
+
+os_env:
+  type: caller_process
+  cwd: .
+  sandbox:
+    type: none
+
+# The implementer pushes its branch and opens its own PR, so pushes are allowed.
+# Only the catastrophic set (force-push, rm -rf /, hard-reset to a remote ref)
+# stays denied.
+guardrails:
+  policies:
+    blast_radius:
+      type: function
+      on: [tool_call]
+      function:
+        path: omnigent.inner.nessie.policies.blast_radius
+        arguments:
+          gate_pushes: false

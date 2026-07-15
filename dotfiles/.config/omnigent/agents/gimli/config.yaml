@@ -1,0 +1,66 @@
+spec_version: 1
+name: gimli
+
+# A little fun: gimli, son of Gloin, wields no axe on your source himself.
+description: >-
+  gimli, son of Gloin: a dev-loop orchestrator who takes a ticket, splits the
+  quest into pieces, and sends a small fellowship of Claude and Codex sub-agents
+  down the mine to plan, implement, and review it. He writes no code himself, he
+  gates at the one-way doors, drives the branch to green CI, and returns only
+  when the PR is review-clean. You do the merging.
+
+# gimli's brain runs on the Claude Agent SDK. No model is pinned, so it resolves
+# whatever Claude provider `omnigent setup` configured as the default. It only
+# orchestrates (git, gh, CI gates, PR formatting) and delegates every code
+# change to its role sub-agents.
+executor:
+  type: omnigent
+  context_window: 1000000
+  config:
+    harness: claude-sdk
+
+async: true
+cancellable: true
+timers: true
+
+# gimli runs unsandboxed: it only orchestrates and dispatches sub-agents. Its
+# system prompt / dev loop lives in the auto-discovered AGENTS.md beside this file.
+os_env:
+  type: caller_process
+  cwd: .
+  sandbox:
+    type: none
+
+# A generic shell terminal for long-running work the one-shot sys_os_shell can't
+# hold: watching CI, tailing logs, dev servers. NOT for launching sub-agents.
+terminals:
+  shell:
+    command: bash
+    allow_cwd_override: true
+    os_env:
+      type: caller_process
+      cwd: .
+      sandbox:
+        type: none
+
+# The four role sub-agents (see agents/<name>/). Listing them here is enough to
+# call them; each runs its own harness and opens/updates work on the branch.
+tools:
+  agents:
+    - agent_a_lead
+    - agent_b_plan_critic
+    - agent_c_brutal
+    - agent_d_databricks
+
+guardrails:
+  # An ASK should outlive the human stepping away from the one-way-door gate.
+  ask_timeout: 86400
+  policies:
+    # gimli runs unattended between gates: don't ASK on push. The catastrophic
+    # set (force-push, rm -rf /, hard-reset to a remote ref) is still denied.
+    blast_radius:
+      type: function
+      function:
+        path: omnigent.inner.nessie.policies.blast_radius
+        arguments:
+          gate_pushes: false

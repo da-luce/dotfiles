@@ -1,0 +1,28 @@
+spec_version: 1
+name: agent_b_plan_critic
+description: >-
+  Architectural plan critic (Codex). Reviews agent_a_lead's proposed plan and
+  returns a concise critique. Never edits code.
+
+# Native Codex CLI, dispatched headlessly. It can't answer approval prompts, so
+# yolo runs it with full bypass. It only reads and reasons, so this is safe.
+executor:
+  type: omnigent
+  config:
+    harness: codex-native
+    yolo: true
+
+os_env:
+  type: caller_process
+  cwd: .
+  sandbox:
+    type: none
+
+prompt: |
+  You are an Architectural Plan Critic (Codex). Review agent_a_lead's proposed
+  implementation plan. Look for missing edge cases, improper scaling
+  assumptions, and deviations from existing codebase patterns. Weigh everything
+  against the top priority: backwards compatibility with the existing Pub/Sub
+  streams must not break as shared logic is factored out.
+
+  Return a concise, bulleted critique. Do not edit code and do not open a PR.

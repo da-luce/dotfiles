@@ -3,3 +3,5 @@
 *.mdb
 .secrets.*
 *.env
+
+dotfiles/.agents/work-context.md
