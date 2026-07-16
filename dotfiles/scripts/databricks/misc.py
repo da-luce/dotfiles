@@ -11,8 +11,6 @@ from databricks.types import Finding
 
 MODULE = "databricks.misc"
 
-# Unambiguous debug leftovers only. Bare `print(` is intentionally excluded:
-# it is legitimate in Python CLIs and produces too much noise.
 DEBUG_LEFTOVER = re.compile(
     r"("
     r"\bprintln\s*\(|"           # Scala / Java / Kotlin

@@ -1,0 +1,135 @@
+spec_version: 1
+name: haldir
+
+description: >-
+  haldir: a generate-verify-refine orchestrator. He interviews you until the
+  goal is pinned to a locked, machine-checkable exit criteria (commands whose
+  real exit codes are the gate), then closes human input and runs autonomously.
+  He dispatches sandboxed worker sub-agents to do the work, never touches code
+  himself, and refuses to declare victory until the locked verification command
+  actually returns success in the terminal. No LLM self-grading, immutable test
+  targets, capped retries.
+
+# haldir's brain runs on the Claude Agent SDK. No model is pinned, so it
+# resolves whatever Claude provider `omnigent setup` configured as the default.
+# He only orchestrates (interview, dispatch, run the verification gate) and
+# delegates every file change to the worker sub-agent.
+executor:
+  type: omnigent
+  context_window: 1000000
+  config:
+    harness: claude-sdk
+
+async: true
+cancellable: true
+timers: true
+
+# Typed session inputs, read on the first turn (see AGENTS.md preflight). These
+# are DEFAULTS for the search; the values actually used are frozen into the
+# locked criteria in Phase 1 (scaled to task difficulty) so they cannot drift.
+params:
+  objective:
+    type: string
+    description: >-
+      Optional one-line description of the goal. If unset, haldir asks for it
+      in Phase 1. Never authoritative until it is locked into the exit criteria.
+  generation_budget:
+    type: integer
+    default: 10
+    description: >-
+      Hard cap on total candidate evaluations across the whole run (the loop
+      breaker). run_verification aborts once spent. Keep it in the 5-15 range.
+  population_size:
+    type: integer
+    default: 1
+    description: >-
+      Islands (independent lineages) explored per generation. 1 = a single
+      evolving branch (cheap, deterministic tasks). 2-4 = a diverse population
+      across different implementer harnesses (harder / open-ended search).
+  blocked_threshold:
+    type: integer
+    default: 3
+    description: >-
+      Stop and notify the human once this many candidates report blocked (the
+      Phase 4 blocked-worker circuit breaker).
+  stall_generations:
+    type: integer
+    default: 3
+    description: >-
+      Reset the worst island(s) / escalate if the best score has not improved
+      for this many generations (anti-repeat / anti-stall circuit breaker).
+
+# haldir runs unsandboxed: he only orchestrates and runs the locked
+# verification command natively (the whole point is a real, un-faked exit code).
+# His system prompt / loop lives in the auto-discovered AGENTS.md beside this
+# file. cwd is the caller's: launch haldir from the workspace the work targets.
+# WORKERS are the ones sandboxed (see agents/worker/config.yaml).
+os_env:
+  type: caller_process
+  cwd: .
+  sandbox:
+    type: none
+
+# A generic shell terminal for long-running work the one-shot sys_os_shell
+# can't hold: tailing verification output, watching a container come up,
+# tearing down scratch resources. NOT for launching sub-agents.
+terminals:
+  shell:
+    command: bash
+    allow_cwd_override: true
+    os_env:
+      type: caller_process
+      cwd: .
+      sandbox:
+        type: none
+
+# Python tools live in tools/python/ and are auto-discovered (one dispatchable
+# tool per file): lock_exit_criteria (Phase 1 freeze), run_verification (Phase 3
+# hard gate + score), record_attempt (Phase 4 ledger / novelty / circuit
+# breakers). The diverse implementer pool (agents/worker_*/) is listed here so
+# haldir can call each by name; the preflight prunes any whose CLI is absent.
+tools:
+  agents:
+    - worker_claude
+    - worker_codex
+    - worker_cursor
+    - worker_gemini
+
+guardrails:
+  # An ASK during the Phase 1 interview / approval gate should outlive the human
+  # stepping away.
+  ask_timeout: 86400
+  policies:
+    # haldir runs verification commands natively and unattended between rounds:
+    # keep the catastrophic set (force-push, rm -rf /, hard-reset to a remote
+    # ref) denied. He does not push, so leave push gating at its default.
+    blast_radius:
+      type: function
+      function:
+        path: omnigent.inner.nessie.policies.blast_radius
+    # Native runaway/spawn backstop. Every worker dispatch is a tool call, so
+    # this hard-DENYs once the session's total tool calls (spawns + verification
+    # + record_attempt + shell) hit the cap — a coarse safety net ABOVE the
+    # precise generation_budget loop breaker in run_verification. Sized to sit
+    # comfortably above a full hard run (~generation_budget candidates x a few
+    # calls each x population, plus preflight/git/teardown); it should only fire
+    # on a genuine loop, not throttle a normal search. Raise it if you raise the
+    # generation_budget / population_size params.
+    runaway_cap:
+      type: function
+      function:
+        path: omnigent.policies.builtins.safety.max_tool_calls_per_session
+        arguments:
+          limit: 120
+    # Native money cap. A diverse population across multiple model families over
+    # several generations can add up, so track cumulative LLM spend for the
+    # session: ASK the human at the soft thresholds (a heads-up they can approve),
+    # and hard-block once max_cost_usd is hit. Tune to your appetite; this is a
+    # per-session cap (see user_daily_cost_budget for a per-user daily ceiling).
+    cost_cap:
+      type: function
+      function:
+        path: omnigent.policies.builtins.cost.cost_budget
+        arguments:
+          max_cost_usd: 20.0
+          ask_thresholds_usd: [5.0, 10.0]
