@@ -7,18 +7,17 @@ description: >-
   code to satisfy the locked objective, runs sandboxed confined to the working
   directory, never touches frozen targets.
 
-# Antigravity (Gemini) SDK: Gemini-native, no Databricks gateway. Authenticate
-# with GEMINI_API_KEY / ANTIGRAVITY_API_KEY (or Vertex). Requires the
-# antigravity extra installed; haldir's preflight skips this worker if the
-# harness/key is unavailable. A fast model keeps candidate throughput high.
+# Antigravity (Gemini) SDK: Gemini-native, no Databricks gateway. Auth is
+# OPTIONAL and resolved ambiently at runtime (GEMINI_API_KEY / ANTIGRAVITY_API_KEY
+# in the environment, or `omnigent setup`) — no auth block here, so the config
+# loads even when no Gemini key is set. haldir's preflight simply prunes this
+# worker from the pool if the harness/key is unavailable. A fast model keeps
+# candidate throughput high.
 executor:
   type: omnigent
   config:
     harness: antigravity
     model: gemini-3.5-flash
-  auth:
-    type: api_key
-    api_key: ${GEMINI_API_KEY}
 
 os_env:
   type: caller_process
