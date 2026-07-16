@@ -11,16 +11,18 @@ from databricks.types import Finding
 
 MODULE = "databricks.misc"
 
+# Unambiguous debug leftovers only. Bare `print(` is intentionally excluded:
+# it is legitimate in Python CLIs and produces too much noise.
 DEBUG_LEFTOVER = re.compile(
-    r"(?i)\b("
-    r"println\s*\(|"
-    r"print\s*\(|"
-    r"dbg!\s*\(|"
-    r"eprintln!\s*\(|"
-    r"console\.log\s*\(|"
-    r"debugger\b|"
-    r"#region\s+agent|"
-    r"pdb\.set_trace\s*\("
+    r"("
+    r"\bprintln\s*\(|"           # Scala / Java / Kotlin
+    r"\bSystem\.out\.print|"     # Java
+    r"\bconsole\.(?:log|debug|trace)\s*\(|"  # JS / TS
+    r"\bdebugger\b|"             # JS
+    r"\bdbg!\s*\(|"              # Rust
+    r"\beprintln!\s*\(|"         # Rust
+    r"\bpdb\.set_trace\s*\(|"    # Python
+    r"\bbreakpoint\s*\(\s*\)"    # Python
     r")"
 )
 COPYRIGHT_YEAR = re.compile(r"Copyright[^\d]*(20\d{2})")
