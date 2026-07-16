@@ -1,10 +1,19 @@
-"""Omnigent tool: mechanical PR nit checks for gimli."""
+"""Omnigent tools: mechanical PR nit checks for gimli.
+
+Auto-discovered from tools/python/. Each @tool-decorated function is exposed to
+gimli by its function name (check_pr_nits, check_pr_nits_scala,
+check_pr_nits_commit). The heavy lifting lives in the dotfiles `databricks`
+package; these are thin, tainted entry points.
+"""
 
 from __future__ import annotations
 
 import os
 import sys
 from pathlib import Path
+from typing import Optional
+
+from omnigent.tools import tool
 
 
 def _scripts_dir() -> Path:
@@ -26,7 +35,7 @@ def _scripts_dir() -> Path:
     )
 
 
-def _run(base_ref: str | None = None, modules: list[str] | None = None) -> list[dict]:
+def _run(base_ref: Optional[str], modules: Optional[list]) -> list:
     scripts = _scripts_dir()
     if str(scripts) not in sys.path:
         sys.path.insert(0, str(scripts))
@@ -37,21 +46,35 @@ def _run(base_ref: str | None = None, modules: list[str] | None = None) -> list[
     return [finding.to_dict() for finding in findings]
 
 
-def check_pr_nits(base_ref: str | None = None) -> list[dict]:
+@tool
+def check_pr_nits(base_ref: Optional[str] = None) -> list:
     """Run all mechanical PR nit checks on the current branch.
 
     Returns structured findings (rule, file, line, severity, message, module).
-    Run this before dispatching agent_d_databricks; pass the output to that
-    reviewer so it can focus on subjective /databricks-review items only.
+    Run this before dispatching agent_d_databricks and pass the output to that
+    reviewer so it focuses on subjective /databricks-review items only.
+
+    Args:
+        base_ref: Base ref to diff against. Defaults to the branch's merge base.
     """
-    return _run(base_ref=base_ref)
+    return _run(base_ref, None)
 
 
-def check_pr_nits_scala(base_ref: str | None = None) -> list[dict]:
-    """Run databricks.scala mechanical checks only."""
-    return _run(base_ref=base_ref, modules=["databricks.scala"])
+@tool
+def check_pr_nits_scala(base_ref: Optional[str] = None) -> list:
+    """Run only the databricks.scala mechanical checks on the current branch.
+
+    Args:
+        base_ref: Base ref to diff against. Defaults to the branch's merge base.
+    """
+    return _run(base_ref, ["databricks.scala"])
 
 
-def check_pr_nits_commit(base_ref: str | None = None) -> list[dict]:
-    """Run databricks.commit mechanical checks only."""
-    return _run(base_ref=base_ref, modules=["databricks.commit"])
+@tool
+def check_pr_nits_commit(base_ref: Optional[str] = None) -> list:
+    """Run only the databricks.commit mechanical checks on the current branch.
+
+    Args:
+        base_ref: Base ref to diff against. Defaults to the branch's merge base.
+    """
+    return _run(base_ref, ["databricks.commit"])

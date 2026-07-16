@@ -58,45 +58,10 @@ terminals:
       sandbox:
         type: none
 
+# Mechanical PR nit checks live in tools/python/check_pr_nits.py and are
+# auto-discovered: each @tool-decorated function (check_pr_nits,
+# check_pr_nits_scala, check_pr_nits_commit) is exposed to gimli by its name.
 tools:
-  # Mechanical PR nit checks. Declared explicitly (not relying on tools/python
-  # auto-discovery) so the tool name, description, and parameter schema are
-  # pinned here and only the intended entry points are exposed. Backed by
-  # tools/python/check_pr_nits.py, which the runtime puts on the import path.
-  check_pr_nits:
-    type: function
-    description: >-
-      Run ALL mechanical PR nit checks on the current branch and return
-      structured findings (rule, file, line, severity, message, module). Run
-      before dispatching agent_d_databricks and pass the output along.
-    callable: check_pr_nits.check_pr_nits
-    parameters:
-      type: object
-      properties:
-        base_ref:
-          type: string
-          description: Base ref to diff against; defaults to the branch's merge base.
-  check_pr_nits_scala:
-    type: function
-    description: Run only the databricks.scala mechanical checks on the current branch.
-    callable: check_pr_nits.check_pr_nits_scala
-    parameters:
-      type: object
-      properties:
-        base_ref:
-          type: string
-          description: Base ref to diff against; defaults to the branch's merge base.
-  check_pr_nits_commit:
-    type: function
-    description: Run only the databricks.commit mechanical checks on the current branch.
-    callable: check_pr_nits.check_pr_nits_commit
-    parameters:
-      type: object
-      properties:
-        base_ref:
-          type: string
-          description: Base ref to diff against; defaults to the branch's merge base.
-
   # The four role sub-agents (see agents/<name>/). Listing them here is enough
   # to call them; each runs its own harness and opens/updates work on the branch.
   agents:
