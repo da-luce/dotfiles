@@ -5,3 +5,4 @@
 *.env
 
 dotfiles/.agents/work-context.md
+__pycache__/

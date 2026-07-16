@@ -13,7 +13,7 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from omnigent.tools import tool
+from omnigent_client import tool
 
 
 def _scripts_dir() -> Path:
@@ -46,8 +46,8 @@ def _run(base_ref: Optional[str], modules: Optional[list]) -> list:
     return [finding.to_dict() for finding in findings]
 
 
-@tool
-def check_pr_nits(base_ref: Optional[str] = None) -> list:
+@tool(strict=False)
+def check_pr_nits(base_ref: Optional[str] = None) -> list[dict]:
     """Run all mechanical PR nit checks on the current branch.
 
     Returns structured findings (rule, file, line, severity, message, module).
@@ -60,8 +60,8 @@ def check_pr_nits(base_ref: Optional[str] = None) -> list:
     return _run(base_ref, None)
 
 
-@tool
-def check_pr_nits_scala(base_ref: Optional[str] = None) -> list:
+@tool(strict=False)
+def check_pr_nits_scala(base_ref: Optional[str] = None) -> list[dict]:
     """Run only the databricks.scala mechanical checks on the current branch.
 
     Args:
@@ -70,8 +70,8 @@ def check_pr_nits_scala(base_ref: Optional[str] = None) -> list:
     return _run(base_ref, ["databricks.scala"])
 
 
-@tool
-def check_pr_nits_commit(base_ref: Optional[str] = None) -> list:
+@tool(strict=False)
+def check_pr_nits_commit(base_ref: Optional[str] = None) -> list[dict]:
     """Run only the databricks.commit mechanical checks on the current branch.
 
     Args:
