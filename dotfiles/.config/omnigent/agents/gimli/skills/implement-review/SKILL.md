@@ -9,9 +9,11 @@ description: >-
 # Phase 2: Implementation and review
 
 1. Have `agent_a_lead` implement the finalized plan on the branch.
-2. Once code is written, call the `check_pr_nits` tool on the branch (pass
-   `params.base_branch` as `base_ref`). Keep the full JSON output; these are
-   authoritative mechanical findings.
+2. Once code is written, call the `check_pr_nits` tool. It runs against your cwd
+   (the worktree verified in the preflight), so just pass
+   `base_ref=params.base_branch`. Narrow with `modules` (e.g.
+   `["databricks.scala"]`) only when you want a scoped rerun. Keep the full JSON
+   output; these are authoritative mechanical findings.
 3. Dispatch `agent_c_brutal` and `agent_d_databricks` IN PARALLEL on the branch
    diff. In the `agent_d_databricks` dispatch, include the full `check_pr_nits`
    output and instruct it to review only subjective `/databricks-review` items

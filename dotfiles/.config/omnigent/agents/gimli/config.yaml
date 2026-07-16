@@ -39,7 +39,10 @@ params:
       against. Passed as base_ref to the mechanical checks.
 
 # gimli runs unsandboxed: it only orchestrates and dispatches sub-agents. Its
-# system prompt / dev loop lives in the auto-discovered AGENTS.md beside this file.
+# system prompt / dev loop lives in the auto-discovered AGENTS.md beside this
+# file. cwd is the caller's: launch gimli from the ticket's worktree so git, the
+# reviewers, and check_pr_nits all operate on that checkout (the preflight in
+# AGENTS.md verifies this and stops if cwd is not a git repo).
 os_env:
   type: caller_process
   cwd: .
@@ -59,8 +62,10 @@ terminals:
         type: none
 
 # Mechanical PR nit checks live in tools/python/check_pr_nits.py and are
-# auto-discovered: each @tool-decorated function (check_pr_nits,
-# check_pr_nits_scala, check_pr_nits_commit) is exposed to gimli by its name.
+# auto-discovered. One tool, check_pr_nits(base_ref, modules): this build
+# registers one dispatchable tool per file, so scoping to scala/commit is a
+# `modules` argument, not a separate tool. It runs against gimli's cwd, which
+# the preflight verifies is the ticket's worktree.
 tools:
   # The four role sub-agents (see agents/<name>/). Listing them here is enough
   # to call them; each runs its own harness and opens/updates work on the branch.

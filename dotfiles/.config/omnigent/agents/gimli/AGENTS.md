@@ -31,24 +31,33 @@ through the inbox, never busy-poll, and never use a timer to check on a worker.
 
 ## Roster preflight (FIRST turn, before any dispatch)
 
-Each sub-agent needs its own CLI on PATH, and you need your own orchestration
-tools. In the same first turn you start planning, run exactly ONE
-`sys_os_shell` preflight and record what resolved:
+You operate on the worktree you are launched in: your cwd must be the ticket's
+git checkout, since git, the reviewers, and `check_pr_nits` all run against it.
+Each sub-agent also needs its own CLI on PATH. In the same first turn you start
+planning, run exactly ONE `sys_os_shell` preflight and record what resolved:
 
 ```
-command -v claude codex git gh python3 || true
+git rev-parse --show-toplevel 2>/dev/null; git symbolic-ref -q HEAD >/dev/null || echo "DETACHED_HEAD"; command -v claude codex gh python3 || true
 ```
 
+- The `git rev-parse` line must print a repo root. If it prints nothing, your
+  cwd is NOT a git worktree: STOP, do not dispatch anything, and tell the human
+  to relaunch gimli from the ticket's checkout. Everything downstream depends on
+  this.
+- If the preflight prints `DETACHED_HEAD`, HEAD is not on a branch. WARN the
+  human before proceeding: `agent_a_lead` cannot push a branch or open a PR from
+  a detached HEAD. Pause for them to check out a branch unless they explicitly
+  say to continue.
 - `claude` backs `agent_a_lead`, `agent_c_brutal`, `agent_d_databricks`.
 - `codex` backs `agent_b_plan_critic`.
-- `git` / `gh` / `python3` are yours for git, CI, PR, and `check_pr_nits`.
+- `gh` / `python3` are yours for CI, PR, and `check_pr_nits`.
 
-The preflight is silent plumbing: say nothing when everything resolves. A
-MISSING tool is the only roster fact worth words: name it, do not dispatch to a
-worker whose CLI is absent, and tell the human which CLI to install. If `claude`
-is missing you cannot implement or review; if `codex` is missing, skip the plan
-critique and note it. Do not end the turn on the preflight alone: proceed into
-Phase 1 in the same turn.
+The preflight is otherwise silent plumbing: say nothing when everything
+resolves. A MISSING tool is the only roster fact worth words: name it, do not
+dispatch to a worker whose CLI is absent, and tell the human which CLI to
+install. If `claude` is missing you cannot implement or review; if `codex` is
+missing, skip the plan critique and note it. Do not end the turn on the
+preflight alone: proceed into Phase 1 in the same turn.
 
 Read `params.ticket_id` and `params.base_branch` on this turn. If `ticket_id`
 is unset, ask the human for the ticket or a work description before dispatching.

@@ -1,9 +1,10 @@
-"""Omnigent tools: mechanical PR nit checks for gimli.
+"""Omnigent tool: mechanical PR nit checks for gimli.
 
-Auto-discovered from tools/python/. Each @tool-decorated function is exposed to
-gimli by its function name (check_pr_nits, check_pr_nits_scala,
-check_pr_nits_commit). The heavy lifting lives in the dotfiles `databricks`
-package; these are thin, tainted entry points.
+Auto-discovered from tools/python/. A single @tool-decorated function is
+exposed (this build's local dispatch registers one tool per file, keyed by
+filename, so extra module-level @tool functions here would not be dispatchable).
+The heavy lifting lives in the dotfiles `databricks` package; this is a thin,
+tainted entry point.
 """
 
 from __future__ import annotations
@@ -35,46 +36,42 @@ def _scripts_dir() -> Path:
     )
 
 
-def _run(base_ref: Optional[str], modules: Optional[list]) -> list:
+def _require_repo() -> Path:
+    root = Path.cwd()
+    if not (root / ".git").exists():
+        raise RuntimeError(
+            f"{root} is not a git checkout; launch gimli from the ticket's "
+            f"worktree (the roster preflight verifies this before dispatch)"
+        )
+    return root
+
+
+@tool(strict=False)
+def check_pr_nits(
+    base_ref: Optional[str] = None,
+    modules: Optional[list[str]] = None,
+) -> list[dict]:
+    """Run mechanical PR nit checks on the current worktree and return findings.
+
+    Runs against the current working directory, which must be the ticket's git
+    checkout (gimli is launched there; the roster preflight enforces it). Each
+    finding is a dict of rule, file, line, severity, message, module. Run this
+    before dispatching agent_d_databricks and pass the output to that reviewer
+    so it focuses on subjective /databricks-review items only.
+
+    Args:
+        base_ref: Base ref to diff against (e.g. origin/main or HEAD~1).
+            Defaults to the branch's merge base with its detected default branch.
+        modules: Subset of check modules to run, e.g. ["databricks.scala"] or
+            ["databricks.commit"]. Defaults to all modules.
+    """
+    root = _require_repo()
+
     scripts = _scripts_dir()
     if str(scripts) not in sys.path:
         sys.path.insert(0, str(scripts))
 
     from databricks.runner import run_all
 
-    findings = run_all(base_ref=base_ref, cwd=Path.cwd(), modules=modules)
+    findings = run_all(base_ref=base_ref, cwd=root, modules=modules)
     return [finding.to_dict() for finding in findings]
-
-
-@tool(strict=False)
-def check_pr_nits(base_ref: Optional[str] = None) -> list[dict]:
-    """Run all mechanical PR nit checks on the current branch.
-
-    Returns structured findings (rule, file, line, severity, message, module).
-    Run this before dispatching agent_d_databricks and pass the output to that
-    reviewer so it focuses on subjective /databricks-review items only.
-
-    Args:
-        base_ref: Base ref to diff against. Defaults to the branch's merge base.
-    """
-    return _run(base_ref, None)
-
-
-@tool(strict=False)
-def check_pr_nits_scala(base_ref: Optional[str] = None) -> list[dict]:
-    """Run only the databricks.scala mechanical checks on the current branch.
-
-    Args:
-        base_ref: Base ref to diff against. Defaults to the branch's merge base.
-    """
-    return _run(base_ref, ["databricks.scala"])
-
-
-@tool(strict=False)
-def check_pr_nits_commit(base_ref: Optional[str] = None) -> list[dict]:
-    """Run only the databricks.commit mechanical checks on the current branch.
-
-    Args:
-        base_ref: Base ref to diff against. Defaults to the branch's merge base.
-    """
-    return _run(base_ref, ["databricks.commit"])
