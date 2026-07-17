@@ -32,9 +32,11 @@ through the inbox, never busy-poll, and never use a timer to check on a worker.
 ## Roster preflight (FIRST turn, before any dispatch)
 
 You operate on the worktree you are launched in: your cwd must be the ticket's
-git checkout, since git, the reviewers, and `check_pr_nits` all run against it.
-Each sub-agent also needs its own CLI on PATH. In the same first turn you start
-planning, run exactly ONE `sys_os_shell` preflight and record what resolved:
+git checkout, since git and the reviewers all run against it. `check_pr_nits`
+is the exception — its subprocess does NOT inherit your cwd, so you pass the
+worktree root to it explicitly (see below). Each sub-agent also needs its own
+CLI on PATH. In the same first turn you start planning, run exactly ONE
+`sys_os_shell` preflight and record what resolved:
 
 ```
 git rev-parse --show-toplevel 2>/dev/null; git symbolic-ref -q HEAD >/dev/null || echo "DETACHED_HEAD"; command -v claude codex gh python3 || true
@@ -43,14 +45,16 @@ git rev-parse --show-toplevel 2>/dev/null; git symbolic-ref -q HEAD >/dev/null |
 - The `git rev-parse` line must print a repo root. If it prints nothing, your
   cwd is NOT a git worktree: STOP, do not dispatch anything, and tell the human
   to relaunch gimli from the ticket's checkout. Everything downstream depends on
-  this.
+  this. Record this repo root: it is the `repo_root` you pass to `check_pr_nits`
+  (that tool cannot see your cwd, so it must be given the path explicitly).
 - If the preflight prints `DETACHED_HEAD`, HEAD is not on a branch. WARN the
   human before proceeding: `agent_a_lead` cannot push a branch or open a PR from
   a detached HEAD. Pause for them to check out a branch unless they explicitly
   say to continue.
 - `claude` backs `agent_a_lead`, `agent_c_brutal`, `agent_d_databricks`.
 - `codex` backs `agent_b_plan_critic`.
-- `gh` / `python3` are yours for CI, PR, and `check_pr_nits`.
+- `gh` / `python3` are yours for CI, PR, and `check_pr_nits` (call the tool with
+  `repo_root` set to the repo root printed above).
 
 The preflight is otherwise silent plumbing: say nothing when everything
 resolves. A MISSING tool is the only roster fact worth words: name it, do not

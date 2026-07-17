@@ -62,10 +62,11 @@ terminals:
         type: none
 
 # Mechanical PR nit checks live in tools/python/check_pr_nits.py and are
-# auto-discovered. One tool, check_pr_nits(base_ref, modules): this build
-# registers one dispatchable tool per file, so scoping to scala/commit is a
-# `modules` argument, not a separate tool. It runs against gimli's cwd, which
-# the preflight verifies is the ticket's worktree.
+# auto-discovered. One tool, check_pr_nits(repo_root, base_ref, modules): this
+# build registers one dispatchable tool per file, so scoping to scala/commit is
+# a `modules` argument, not a separate tool. The tool subprocess does NOT
+# inherit gimli's cwd, so gimli passes repo_root explicitly (the worktree root
+# from the preflight's `git rev-parse --show-toplevel`).
 tools:
   # The four role sub-agents (see agents/<name>/). Listing them here is enough
   # to call them; each runs its own harness and opens/updates work on the branch.
