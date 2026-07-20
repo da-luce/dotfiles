@@ -27,10 +27,10 @@
 
 ### Commenting
 
-- Be conservative on how many comments you add. Name variables, functions, etc.,
+- Comment only where a reader of the code would reasonably be confused
+- Be conservative on how many comments you add--name variables, functions, etc.,
   so the code speaks for itself.
-- Comment only where a reader of the code could reasonably be confused, and keep
-  comments concise and short.
+- Any comments you decide are truly necessary should be concise, short, and tight.
 
 Bad Example 1 (AI written, over-explained):
 
@@ -80,14 +80,13 @@ output of a reasoning thought chain, not in production code.
 ### Committing
 
 - Never add yourself as a co-author.
-- Keep the body of commit messages short, and most commits do not even need one.
+- Many commits should not warrent a commit message--those that do should be kept short.
 - Use [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/). If
   there is a Jira ticket ID, use it as the scope, e.g. `refactor(SC-232683): ...`
 
-## Voice Style
+### Voice Style
 
-When asked to write a description (e.g. a Jira ticket) or a comment (e.g. on a
-PR), keep things straightforward.
+When asked to write a description (e.g. a Jira ticket) or a comment (e.g. on a PR), keep things straightforward and simple to understand.
 
 Example (BAD):
 
@@ -95,7 +94,8 @@ Example (BAD):
 
 Example (GOOD/FIXED):
 
-> Description: The shared queue fetch loop polls on a fixed 500ms timer, so it can be half a second late to notice that fetching finished or failed, that buffered messages are ready to write, or that the fetch period is up. Rework the QueueClient interface so the client signals these events directly and the loop reacts immediately, with the new timing behind a config flag (off by default) so existing Pub/Sub streams keep their current behavior until we ramp it up.
+> Description: The shared queue's 500ms polling loop delays handling of fetch completions, errors, and ready buffers by up to half a second. We update `QueueClient` to signal these events directly, safely gated behind an off-by-default config flag.
+
 
 ## Formatting Rules
 
