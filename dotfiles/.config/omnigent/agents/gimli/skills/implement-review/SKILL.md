@@ -15,15 +15,22 @@ description: >-
    Narrow with `modules` (e.g. `["databricks.scala"]`) only when you want a
    scoped rerun. Keep the full JSON output; these are authoritative mechanical
    findings.
-3. Dispatch `agent_c_brutal` and `agent_d_databricks` IN PARALLEL on the branch
-   diff. In the `agent_d_databricks` dispatch, include the full `check_pr_nits`
+3. Perform the following steps IN PARALLEL
+
+   a. Dispatch `agent_c_brutal` on the branch diff
+   b. Dispatch `agent_d_databricks` on the branch diff. Include the full `check_pr_nits`
    output and instruct it to review only subjective `/databricks-review` items
-   not already covered. Then end your turn and collect both from the inbox.
-4. Collect findings from `check_pr_nits`, `agent_c_brutal`, and
-   `agent_d_databricks`. Do not drop mechanical findings when merging.
+   not already covered.
+   c. Dispatch `agent_a_lead` to run the build and the test suite and report the
+   full output.
+
+   Then end your turn and collect all three from the inbox.
+4. Merge the step 2 `check_pr_nits` JSON with the three inbox results
+   (`agent_c_brutal`, `agent_d_databricks`, and the build/test run). Mechanical
+   findings are authoritative; never drop them when merging.
 5. HITL GATE 2 (conditional): pause for the human ONLY if a reviewer found a
    major architectural flaw needing a product decision. Otherwise proceed.
-6. Have `agent_a_lead` fix all valid review findings.
+6. Have `agent_a_lead` fix all valid review findings, along with any build failures.
 7. Commit to the branch, push, and watch CI (use the `shell` terminal for the
    watch). If CI fails, feed the logs back to `agent_a_lead` to fix and re-push
    until CI is green. After fixes, re-run `check_pr_nits` before declaring
@@ -34,12 +41,13 @@ Exit: green CI and no unresolved mechanical or review findings. Next, load
 
 ## Verifying sub-agents
 
-Do not infer success from git status alone. Read each sub-agent's reported
-result and run the test / lint / typecheck gates yourself via `sys_os_shell`.
-When reconciling a pytest count, collect ground truth with
-`python -m pytest --collect-only -q <same files>` against the exact file set and
-commit the worker reported. Never use `grep -c 'def test_'` as a test count: it
-counts functions, not collected cases, and misses parametrized expansion.
+Do not infer success from git status alone. You do not run the gates yourself;
+the sub-agent running them must report the full test / lint / typecheck output,
+not a bare "passing" claim. When reconciling a pytest count, verify ground truth
+with `python -m pytest --collect-only -q <same files>` (a read-only count, not a
+gate) against the exact file set and commit the worker reported. Never use
+`grep -c 'def test_'` as a test count: it counts functions, not collected cases,
+and misses parametrized expansion.
 
 If a sub-agent returns an empty or unclear result, inspect its conversation
 before deciding what to do. If one is clearly wrong or runaway, cancel it rather
