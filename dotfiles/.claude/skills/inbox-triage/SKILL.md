@@ -64,14 +64,18 @@ hidden labels as a misconfiguration to repair.**
    `triage/noise` plus `triage/done`. Gmail's own `category:` buckets are
    unreliable here and must not be the only filter, which is why the learned
    list exists.
-4. Classify what survives, reading the full thread for context and judging each
+4. **Skip messages less than 15 minutes old.** Leave them unlabeled for the
+   next run. A burst of fast replies judged mid-flight fragments one
+   conversation into several tasks, and the settling window lets the burst land
+   as a unit. This costs nothing, since an unlabeled message is just queued.
+5. Classify what survives, reading the full thread for context and judging each
    unlabeled message on its own as exactly one of task, event, or noise. A
    thread can yield a task in March having yielded one in January, and that is
    correct, not a duplicate.
 
 ### The cap
 
-Cap **classifications in step 4** at 50 per run, not threads examined, since
+Cap **classifications in step 5** at 50 per run, not threads examined, since
 step 3 already absorbed the cheap rejections. Order by directly-addressed first
 (`to:me` and not a mailing list), then oldest first within that, which bounds
 how long anything waits without letting list mail starve a real request.
@@ -127,6 +131,13 @@ second copy is a duplicate. Partial details are fine. Create it with what the
 email gives and say what was missing in the digest.
 
 ## Phase 2: adversarial review
+
+**If no items survived phase 1, stop here.** Do not spawn a reviewer, do not
+enter phase 3, and emit no digest at all. This skill is designed to be run
+often, so the common outcome is an empty run, and an empty run must be free and
+silent. A reviewer invoked on an empty proposal is pure waste, and a digest
+saying nothing happened recreates in notifications exactly the noise the label
+hiding was meant to remove.
 
 Hand `proposal.json` to a **fresh** subagent. Not a fork. The reviewer must not
 inherit the reasoning that produced the proposal, since that reasoning is the
@@ -184,18 +195,28 @@ re-triages the thread rather than silently losing it.
    what makes the retry in the sentence above safe. It is keyed on the message
    and **never on the thread**, because a thread-keyed stamp would suppress a
    real new task on a thread that produced one months ago.
-2. Resolve conventions live. Call `find-projects` and `find-labels` once and map
+2. Check for an open task from the same conversation. Search Todoist for the
+   item's `thread_id` among **incomplete** tasks only. If one exists, the new
+   message is almost certainly the same obligation still outstanding, so skip
+   creating a second task and say so in the digest. This is deliberately not
+   the same as the message stamp in step 1: that one is a hard dedupe on an
+   exact message, while this is a soft check scoped to unresolved work. A
+   *completed* task must never suppress anything, because a new message on a
+   settled thread is genuinely new work.
+3. Resolve conventions live. Call `find-projects` and `find-labels` once and map
    onto what exists. Follow established patterns, like `@assignment` for
    coursework. Never invent a project.
-3. Create the task. The description carries the permalink to the specific
-   message and the literal stamp `gmail:<message_id>`. Always add the `@ai`
-   label to mark it AI-generated and untriaged.
-4. Create events on the `ai` calendar only, with the permalink and the same
-   stamp in the description.
-5. Label every examined **message** `triage/done`, and additionally
+4. Create the task. The description carries the permalink to the specific
+   message, the literal stamp `gmail:<message_id>`, and `gmail-thread:<thread_id>`
+   so the check in step 2 can find it. Always add the `@ai` label to mark it
+   AI-generated and untriaged.
+5. Create events on the `ai` calendar only, with the permalink and the same
+   stamps in the description.
+6. Label every examined **message** `triage/done`, and additionally
    `triage/noise` for noise and for senders the reviewer flagged. Never label
-   the thread, and never label a message the cap deferred.
-6. Emit the digest.
+   the thread, and never label a message the cap deferred or the settling
+   window skipped.
+7. Emit the digest.
 
 ### Dates
 
@@ -218,7 +239,9 @@ the UI label run in opposite directions, so write the API number.
 
 ## Digest
 
-End with this and nothing else. It is the only thing the user reads.
+Emit nothing when the run created nothing and learned nothing. Silence is the
+correct output for an empty run. Otherwise end with this and nothing else, as
+it is the only thing the user reads.
 
 ```
 Triaged N threads.
@@ -229,4 +252,4 @@ Open questions: <anything undecidable>
 Backlog: N messages awaiting classification (<flag if above 150>)
 ```
 
-Keep it short and factual. If nothing was created, say so in one line.
+Keep it short and factual. Report only lines that have content.
