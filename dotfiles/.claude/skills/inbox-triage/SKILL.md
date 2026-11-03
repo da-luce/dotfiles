@@ -19,6 +19,19 @@ in the digest at the end as an open question and is otherwise dropped.
 
 ## Dependencies
 
+Gmail tools used: `search_threads`, `get_thread`, `list_labels`,
+`label_message`. Resolve label display names to ids with `list_labels` at the
+start of every run, because `label_message` takes ids and a Gmail query takes
+display names. Call `get_thread` with `messageFormat: PLAIN_TEXT`, never the
+`FULL_CONTENT` default, which returns the HTML body and will burn context for
+no benefit on a job that runs hourly.
+
+**Never call `label_thread`.** Its own docs state it affects "all messages
+currently in the thread and any future messages added to it," so a reply
+arriving tomorrow would be born already labeled and would never surface. It
+looks like the efficient choice and it silently destroys the state model. Use
+`label_message` per message, always.
+
 Requires a Gmail tool that can search and modify labels **on individual
 messages**, not only on whole threads. Label writes are not optional: they are
 the only durable state this skill has. Message-level granularity is equally
@@ -27,9 +40,10 @@ threads, stop and report rather than degrading to thread labels.
 
 ## State
 
-All state lives in Gmail as two labels. There is no watermark, no state file,
-and nothing on disk, so the skill behaves identically whether a scheduled run
-keeps a filesystem between invocations or not.
+All state lives in Gmail as two labels, both created hidden in the label list
+and the message list, so they never appear in the UI. There is no watermark,
+no state file, and nothing on disk, so the skill behaves identically whether a
+scheduled run keeps a filesystem between invocations or not.
 
 - `triage/done` goes on every **message** the run examines, noise included.
 - `triage/noise` goes on messages classified as noise. It is a subset of
@@ -52,9 +66,36 @@ hidden labels as a misconfiguration to repair.**
 
 ## Phase 1: draft a proposal
 
-1. Build the learned noise list with one query: `label:triage/noise newer_than:90d`.
-   Collect the distinct sender addresses and domains. Hold them for the run.
-2. Fetch the work: `in:inbox -label:triage/done`. This returns every thread
+1. Build the learned noise list, and hold it for the run:
+
+   - `label:"triage/noise" newer_than:90d` for senders this skill has already
+     rejected.
+   - Plus the senders behind these existing hand-curated bulk labels, which
+     encode years of the user's own judgement about what is not worth reading:
+     `Scholarships`, `Medium-Daily-Digest`, `linkedin`, `Ourbus`, `shop`,
+     `recruit`, `receipt`. Sample recent threads per label rather than reading
+     them all. **This list is user-editable, so treat it as configuration and
+     do not add to it on your own.**
+
+   Collect distinct sender addresses and domains. Seeding this way is what
+   stops the first weeks behaving worse than the later ones.
+2. Fetch the work:
+
+   ```
+   in:inbox after:2026/10/27 -label:"triage/done"
+   ```
+
+   Quote the label, since an unquoted `/` is not parsed as nesting. Page with
+   `pageSize: 50`, the maximum.
+
+   The `after:` date is the **triage epoch**, fixed at setup. It is what makes
+   everything older than it permanently out of scope, instead of bulk-labeling
+   a backlog of hundreds of threads. Keep it a literal date and **never change
+   it to a rolling `newer_than:`**, which would silently drop any message the
+   cap deferred for longer than the window. An old thread that receives a new
+   reply still surfaces, because the reply's own date clears the epoch.
+
+   This returns every thread
    holding at least one unlabeled message, including long-settled threads that
    just received a reply. Within each thread, **the unlabeled messages are the
    work.** Ignore the labeled ones except as context.
@@ -121,6 +162,8 @@ the message implies an action I personally own.
   expiring credential, a failing renewal, an account action required
 - A review, signature, approval, or form explicitly assigned to me
 - A reply on a thread I started where the ball is back with me
+- Anything the user labeled `action` by hand, which is an explicit signal and
+  outranks every heuristic here. Never classify an `action` message as noise.
 
 ### What earns an event
 
