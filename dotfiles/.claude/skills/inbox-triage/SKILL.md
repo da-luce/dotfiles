@@ -6,18 +6,19 @@ description: |
   survivors. Runs unattended on a schedule. Use when asked to triage my inbox,
   check my email, sweep the inbox, or work out what I owe people.
 allowed-tools: |
-  Bash(date:*), Task,
-  mcp__claude_ai_Todoist__find-tasks, mcp__claude_ai_Todoist__find-projects,
-  mcp__claude_ai_Todoist__find-labels, mcp__claude_ai_Todoist__add-tasks,
-  mcp__claude_ai_Google_Calendar__list_events,
-  mcp__claude_ai_Google_Calendar__create_event,
-  mcp__claude_ai_Google_Calendar__list_calendars
+  Bash(date:*), Task, ToolSearch
 ---
 
 Run unattended. Never ask the user a question. Anything you cannot decide goes
 in the digest at the end as an open question and is otherwise dropped.
 
 ## Dependencies
+
+**MCP tool names differ by where this runs**, so do not hardcode them. In a
+local Claude Code session they are prefixed `mcp__claude_ai_Gmail__`, while in
+a cloud routine they take the connector's name instead, as in `mcp__Gmail__`,
+`mcp__Todoist__` and `mcp__Google-Calendar__`. Discover them with `ToolSearch`
+rather than assuming either form.
 
 Gmail tools used: `search_threads`, `get_thread`, `list_labels`,
 `label_message`. Resolve label display names to ids with `list_labels` at the
@@ -73,12 +74,33 @@ hidden labels as a misconfiguration to repair.**
    - Plus the senders behind these existing hand-curated bulk labels, which
      encode years of the user's own judgement about what is not worth reading:
      `Scholarships`, `Medium-Daily-Digest`, `linkedin`, `Ourbus`, `shop`,
-     `recruit`, `receipt`. Sample recent threads per label rather than reading
-     them all. **This list is user-editable, so treat it as configuration and
-     do not add to it on your own.**
+     `receipt`. Sample recent threads per label rather than reading them all.
+     **This list is user-editable, so treat it as configuration and do not add
+     to it on your own.** Only labels holding one-way bulk mail belong here.
+     Never seed from a label holding two-way correspondence, because those
+     contain the user's own sent messages.
 
-   Collect distinct sender addresses and domains. Seeding this way is what
-   stops the first weeks behaving worse than the later ones.
+   Append `-from:me` to every seed query. Without it the sample picks up
+   threads the user sent, and their own address enters the noise list.
+
+   From the seeded labels collect **full addresses only, never bare domains.**
+   A single sent message under a label like `recruit` is enough to put
+   `gmail.com` on the list, which would silently discard every personal email
+   the user receives and bury each one under `triage/done` where nothing ever
+   reconsiders it. Domain-level entries may come only from `triage/noise`,
+   where this skill made the call itself.
+
+   Three hard exclusions, applied no matter what any query returns:
+
+   - The user's own address, `daltonluce42@gmail.com`.
+   - Any consumer mail domain: `gmail.com`, `outlook.com`, `hotmail.com`,
+     `yahoo.com`, `icloud.com`, `proton.me`, `aol.com`.
+   - Any address already carrying the `action` label, which is an explicit
+     signal from the user that it matters.
+
+   Seeding is what stops the first weeks behaving worse than the later ones,
+   but a poisoned seed is far worse than an empty one. When a seed query looks
+   wrong, skip that label and say so in the digest.
 2. Fetch the work:
 
    ```
@@ -221,6 +243,11 @@ single run and thread-keyed verdicts would be ambiguous:
 A verdict for every proposed `message_id` is required. A missing or unmatched
 id is unparseable output, which means the fail-closed rule below applies.
 
+**Block on the reviewer. Never call `ScheduleWakeup`.** Wait for the subagent
+to hand back and continue in the same turn. A wakeup scheduled as a heartbeat
+stays armed after the run finishes and re-invokes the whole session outside the
+cron schedule, which is usage nobody budgeted for.
+
 **One round.** Apply the verdicts and move on. Do not argue with the reviewer
 and do not send a revised proposal back, because an unbounded critique loop
 burns tokens and converges on nothing.
@@ -249,12 +276,32 @@ re-triages the thread rather than silently losing it.
 3. Resolve conventions live. Call `find-projects` and `find-labels` once and map
    onto what exists. Follow established patterns, like `@assignment` for
    coursework. Never invent a project.
-4. Create the task. The description carries the permalink to the specific
-   message, the literal stamp `gmail:<message_id>`, and `gmail-thread:<thread_id>`
-   so the check in step 2 can find it. Always add the `@ai` label to mark it
-   AI-generated and untriaged.
-5. Create events on the `ai` calendar only, with the permalink and the same
-   stamps in the description.
+4. Create the task. The description is **one line**, which is simultaneously
+   the stamp, both ids, and the link:
+
+   ```
+   [gmail:<thread_id>/<message_id>](<permalink to the specific message>)
+   ```
+
+   Collapse it to `[gmail:<message_id>](<permalink>)` whenever the thread id
+   and message id are equal, which is every single-message thread.
+
+   This works because Todoist's `searchText` matches substrings and reaches
+   inside markdown link syntax, verified against a live account: searching
+   `<message_id>` finds it for the step 1 dedupe, and searching
+   `gmail:<thread_id>` finds it for the step 2 open-task check. Put the thread
+   id first so that prefix search stays reliable.
+
+   Add a single sentence above the link only when the title cannot carry the
+   information by itself, such as an amount that lives in an attachment. It
+   states the obligation and nothing else. Never narrate how the
+   classification was reached and never mention the signals behind it, like the
+   message being starred or carrying some label. The user knows what they did
+   to their own mail, and that commentary is clutter in a task list.
+
+   Always add the `@ai` label to mark it AI-generated and untriaged.
+5. Create events on the `ai` calendar only, with the same description shape
+   and the same stamp rules as step 4.
 6. Label every examined **message** `triage/done`, and additionally
    `triage/noise` for noise and for senders the reviewer flagged. Never label
    the thread, and never label a message the cap deferred or the settling
