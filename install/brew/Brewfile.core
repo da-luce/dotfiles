@@ -1,0 +1,41 @@
+# Shell and CLI
+
+# Shell
+brew "starship"     # prompt
+brew "tmux"
+brew "autojump"
+
+# Editor
+brew "neovim"
+
+# Git
+brew "git"
+brew "gh"
+
+# Dotfile plumbing
+brew "stow"
+brew "jq"           # install/hooks.sh requires this
+
+# Search and files
+brew "ripgrep"
+brew "fd"
+brew "fzf"
+brew "bat"
+brew "eza"
+brew "tree"
+brew "wget"
+
+# Monitoring
+brew "btop"
+brew "htop"
+
+# Secrets
+brew "bitwarden-cli"
+
+# Fun
+brew "astroterm"
+
+# Useful for headless
+tap "jakehilborn/jakehilborn"
+brew "displayplacer"   # set resolution/arrangement with no display attached
+brew "syncthing"

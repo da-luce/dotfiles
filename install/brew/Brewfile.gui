@@ -1,0 +1,33 @@
+# GUI layer apps 
+
+tap "felixkratz/formulae"
+
+# Fonts
+cask "font-jetbrains-mono-nerd-font"
+
+# Terminals
+cask "alacritty"
+cask "iterm2"
+# cask "ghostty"
+# cask "kitty"
+# cask "wezterm"
+
+# Browsers
+cask "google-chrome"
+cask "firefox@developer-edition"
+
+# Editors
+cask "visual-studio-code"
+cask "docker-desktop"
+
+# Window management
+cask "rectangle"
+brew "borders"      # felixkratz/formulae; started by bootstrap.sh
+
+# Apps
+cask "bitwarden"
+cask "slack"
+cask "spotify"
+cask "obsidian"
+cask "todoist-app"
+cask "google-drive"

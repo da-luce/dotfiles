@@ -1,20 +1,31 @@
 # Dotfiles
 
-## Usage
+## Setup
 
-### Mac
+```sh
+git clone https://github.com/da-luce/dotfiles ~/.dotfiles
+cd ~/.dotfiles
+./install/bootstrap.sh desktop     # or: headless
+```
 
-1. Clone the repo: `git clone https://github.com/da-luce/dotfiles ~/.dotfiles`
-2. Install [Homebrew](https://brew.sh/)
-3. Install [GNU Stow](https://www.gnu.org/software/stow/): `brew install stow`
-4. Navigate to the repo directory: `cd ~/.dotfiles`
-5. Stow the dotfiles: `stow dotfiles`
-6. Install dependencies: `brew bundle --file=install/Brewfile`
-7. Change defaults: `./install/defaults.sh`
-8. Configure daemons: `./install/extra.sh`
-9. Install extras:
-   - `./misc/rectangle/install.sh`
-   - `./misc/alt-tab-macos/install.sh`
+`bootstrap.sh` installs everything needed.
+
+Profiles:
+
+- `headless` — CLI only
+- `desktop` — adds casks, fonts, macOS plist settings, window management
+
+## Manual steps after a run
+
+- Copy over `.secrets.env`
+- Log in to utilities: `gh auth login`, `bw login`
+- Remote Login, Screen Sharing, automatic login on headless machine - 
+  see [install/README.md](install/README.md#headless-machine)
+- Importing `misc/tabliss/gruvbox.json` into the Tabliss extension
+
+## Notes
+
+Run stow with `--no-folding` so it links individual files
 
 ## TODO
 
