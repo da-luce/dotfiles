@@ -37,7 +37,7 @@ if [ -f "$HOME/.bashrc" ]; then
 fi
 
 # opam configuration
-test -r /Users/sixsa/.opam/opam-init/init.sh && . /Users/sixsa/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
+test -r "$HOME/.opam/opam-init/init.sh" && . "$HOME/.opam/opam-init/init.sh" > /dev/null 2> /dev/null || true
 . "$HOME/.cargo/env"
 
 export NVM_DIR="$HOME/.nvm"

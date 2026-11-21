@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /Users/sixsa/.dotfiles/.secrets.env
+source "$HOME/.dotfiles/.secrets.env"
 
 LOGIN_COMMAND="ssh -X $VPN_USERNAME@ecelinux.ece.cornell.edu"
 VPN_EXEC=/opt/cisco/secureclient/bin/vpn
