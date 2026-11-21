@@ -35,6 +35,9 @@ brew "bitwarden-cli"
 # Fun
 brew "astroterm"
 
+# Network
+brew "tailscale"
+
 # Useful for headless
 tap "jakehilborn/jakehilborn"
 brew "displayplacer"   # set resolution/arrangement with no display attached
