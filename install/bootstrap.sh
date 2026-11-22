@@ -36,15 +36,9 @@ echo "profile: $PROFILE"
 
 # ------------------------------------------------------------- 1 preflight ---
 step "Xcode command line tools"
-if xcode-select -p >/dev/null 2>&1; then
-  info "already installed"
-elif [ "$DRY_RUN" = "1" ]; then
-  info "[dry-run] xcode-select --install"
-else
-  xcode-select --install || true
-  info "waiting for the installer to finish (accept the GUI prompt)..."
-  until xcode-select -p >/dev/null 2>&1; do sleep 15; done
-fi
+# Prerequisite.
+xcode-select -p >/dev/null 2>&1 || die "missing. Run: xcode-select --install"
+info "ok: $(xcode-select -p)"
 
 step "Homebrew"
 if command -v brew >/dev/null 2>&1; then

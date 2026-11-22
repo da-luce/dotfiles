@@ -3,6 +3,7 @@
 ## Setup
 
 ```sh
+xcode-select --install # needed for git
 git clone https://github.com/da-luce/dotfiles ~/.dotfiles
 cd ~/.dotfiles
 ./install/bootstrap.sh desktop     # or: headless
