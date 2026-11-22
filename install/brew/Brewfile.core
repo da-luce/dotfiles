@@ -37,6 +37,9 @@ brew "bitwarden-cli"
 cask "claude-code" 
 cask "antigravity-cli"
 
+# Local models
+brew "ollama"
+
 # Fun
 brew "astroterm"
 

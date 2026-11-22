@@ -76,6 +76,9 @@ fi
 step "Tailscale daemon"
 run sudo brew services start tailscale
 
+step "Ollama service"
+run brew services start ollama
+
 # ---------------------------------------------------------------- 3 stow -----
 step "Symlinking dotfiles"
 # Pre-create the parents so stow links individual files
@@ -147,6 +150,8 @@ if [ "$PROFILE" = "desktop" ]; then
 CHECKLIST
 else
   cat <<'CHECKLIST'
+    - sudo tailscale serve --bg --tcp 11434 tcp://localhost:11434
+      (exposes Ollama on the tailnet, after tailscale up)
     - Enable Remote Login / Screen Sharing / automatic login:
       see install/README.md, "Headless machine".
 CHECKLIST
