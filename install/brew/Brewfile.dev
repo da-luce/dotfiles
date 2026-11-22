@@ -6,7 +6,6 @@ brew "python@3.12"
 brew "rustup"
 
 brew "awscli"
-brew "terraform"
 brew "poetry"
 brew "pipx"
 brew "luarocks"

@@ -58,6 +58,13 @@ done
 
 # ---------------------------------------------------------------- 2 brew -----
 step "Homebrew packages"
+
+# Trust taps
+run brew trust --tap jakehilborn/jakehilborn
+if [ "$PROFILE" = "desktop" ]; then
+  run brew trust --tap felixkratz/formulae
+fi
+
 run brew bundle --file="$REPO/install/brew/Brewfile.core"
 run brew bundle --file="$REPO/install/brew/Brewfile.dev"
 if [ "$PROFILE" = "desktop" ]; then
