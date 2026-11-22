@@ -135,6 +135,8 @@ cat <<'CHECKLIST'
     - gh auth login
     - bw login                 (bitwarden-cli)
     - sudo tailscale up        (prints a URL to authenticate; open it anywhere)
+    - claude                   (then /login; opens a URL you can use anywhere)
+    - agy                      (antigravity-cli; sign in on first run)
 CHECKLIST
 if [ "$PROFILE" = "desktop" ]; then
   cat <<'CHECKLIST'

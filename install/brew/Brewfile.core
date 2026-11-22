@@ -33,6 +33,10 @@ brew "htop"
 # Secrets
 brew "bitwarden-cli"
 
+# Coding agents
+cask "claude-code" 
+cask "antigravity-cli"
+
 # Fun
 brew "astroterm"
 
