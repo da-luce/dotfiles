@@ -73,6 +73,9 @@ else
   info "skipping Brewfile.gui (headless)"
 fi
 
+step "Tailscale daemon"
+run sudo brew services start tailscale
+
 # ---------------------------------------------------------------- 3 stow -----
 step "Symlinking dotfiles"
 # Pre-create the parents so stow links individual files
@@ -116,9 +119,6 @@ else
   step "Desktop steps"
   info "skipped (headless): macOS defaults, Rectangle, borders"
 
-  step "Tailscale daemon"
-  run sudo brew services start tailscale
-
   step "Headless machine settings"
   info "needs sudo; skip with SKIP_HEADLESS=1"
   if [ "${SKIP_HEADLESS:-0}" = "1" ]; then
@@ -134,6 +134,7 @@ cat <<'CHECKLIST'
     - Copy ~/.dotfiles/.secrets.env from the old machine (gitignored: VPN_*).
     - gh auth login
     - bw login                 (bitwarden-cli)
+    - sudo tailscale up        (prints a URL to authenticate; open it anywhere)
 CHECKLIST
 if [ "$PROFILE" = "desktop" ]; then
   cat <<'CHECKLIST'
@@ -144,8 +145,6 @@ if [ "$PROFILE" = "desktop" ]; then
 CHECKLIST
 else
   cat <<'CHECKLIST'
-    - sudo tailscale up --hostname=<name>   (prints a URL to authenticate;
-      open it on any device, not necessarily this one)
     - Enable Remote Login / Screen Sharing / automatic login:
       see install/README.md, "Headless machine".
 CHECKLIST
