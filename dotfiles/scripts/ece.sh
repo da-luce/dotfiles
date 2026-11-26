@@ -1,8 +1,5 @@
 #!/bin/bash
 
-source "$HOME/.dotfiles/.secrets.env"
-
-LOGIN_COMMAND="ssh -X $VPN_USERNAME@ecelinux.ece.cornell.edu"
 VPN_EXEC=/opt/cisco/secureclient/bin/vpn
 
 # Color codes
@@ -17,6 +14,16 @@ OK="${GREEN}●${NC}"
 FAIL="${RED}●${NC}"
 WARN="${YELLOW}◍${NC}"
 INFO="${BLUE}○${NC}"
+
+# The settings come from the environment; the `ece` alias supplies them.
+require_vpn_config() {
+    if [ -n "$VPN_HOST" ] && [ -n "$VPN_USERNAME" ] && [ -n "$VPN_METHOD" ]; then
+        return 0
+    fi
+
+    echo -e "${FAIL} VPN_HOST, VPN_USERNAME and VPN_METHOD are unset. Run via the \`ece\` alias."
+    return 1
+}
 
 get_os_vers() {
     local os_version=$(sw_vers -productVersion)
@@ -70,38 +77,33 @@ vpn_connected() {
 }
 
 connect_to_vpn() {
-    # Prompt for password securely (no echo)
-    read -s -p "Enter VPN password: " VPN_PASSWORD
-    echo
+    require_vpn_config || return 1
+
+    local password=$VPN_PASSWORD
+    if [ -z "$password" ]; then
+        # No echo, so the password stays off the screen
+        printf 'Enter VPN password: ' >&2
+        read -rs password
+        echo >&2
+    fi
 
     # WARNING: Don't connect if already connected to VPN: stuff gets wonky
 
-    # Generate secureclient.txt file dynamically
-    cat <<EOF > ./secureclient.txt
+    $VPN_EXEC -s <<EOF
 connect $VPN_HOST
 $VPN_USERNAME
-$VPN_PASSWORD
+$password
 $VPN_METHOD
 y
 exit
 EOF
-
-    # Connect
-    $VPN_EXEC -s < ./secureclient.txt
-
-    # Capture the return code
-    local ret_code=$?
-
-    # For security
-    rm ./secureclient.txt
-    unset VPN_PASSWORD  # clear from memory
-
-    return $ret_code
 }
 
 
 # Main script logic
 connect() {
+
+    require_vpn_config || return 1
 
     echo -ne "${INFO} Getting macOS Version... "
     VERS=$(get_os_vers)
@@ -170,5 +172,5 @@ connect() {
     fi
 
     echo -e "${INFO} Logging in to ecelinux..."
-    $LOGIN_COMMAND
+    ssh -X "$VPN_USERNAME@ecelinux.ece.cornell.edu"
 }

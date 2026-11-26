@@ -73,6 +73,9 @@ else
   info "skipping Brewfile.gui (headless)"
 fi
 
+step "Bitwarden Secrets Manager CLI"
+run bash "$REPO/install/bws.sh"
+
 step "Tailscale daemon"
 run sudo brew services start tailscale
 
@@ -134,9 +137,9 @@ fi
 # ------------------------------------------------------------- 7 wrap up -----
 step "Done — manual steps left"
 cat <<'CHECKLIST'
-    - Copy ~/.dotfiles/.secrets.env from the old machine (gitignored: VPN_*).
     - gh auth login
-    - bw login                 (bitwarden-cli)
+    - Secrets Manager token    (web vault -> Secrets Manager -> machine account,
+                                then: fnox set -g -p kc BWS_ACCESS_TOKEN)
     - sudo tailscale up        (prints a URL to authenticate; open it anywhere)
     - claude                   (then /login; opens a URL you can use anywhere)
     - agy                      (antigravity-cli; sign in on first run)

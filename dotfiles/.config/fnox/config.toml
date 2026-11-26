@@ -1,0 +1,24 @@
+# Gloval config - secrets available from any directory
+# https://fnox.jdx.dev/ - syncs secrets from Bitwarden to local env
+
+[daemon]
+enabled = true
+
+[providers.kc]
+type = "keychain"
+service = "fnox"
+
+[providers.bws]
+type = "bitwarden-sm"
+project_id = "be8ca96e-d060-4e38-a462-b50e015b76ee"
+cache_ttl = "1h"
+
+[secrets]
+BWS_ACCESS_TOKEN= { provider = "kc", value = "BWS_ACCESS_TOKEN", env = false }
+
+# Cornell VPN
+VPN_HOST= { provider = "bws", value = "VPN_HOST" }
+VPN_USERNAME= { provider = "bws", value = "VPN_USERNAME" }
+VPN_METHOD= { provider = "bws", value = "VPN_METHOD" }
+# env = "exec": set for `fnox exec` children, never in the interactive shell.
+VPN_PASSWORD= { provider = "bws", value = "VPN_PASSWORD", env = "exec" }

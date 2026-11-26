@@ -18,8 +18,9 @@ Profiles:
 
 ## Manual steps after a run
 
-- Copy over `.secrets.env`
-- Log in to utilities: `gh auth login`, `bw login`
+- Log in to utilities: `gh auth login`
+- Store the Secrets Manager machine account token so fnox can read secrets:
+  `fnox set -g --provider kc BWS_ACCESS_TOKEN`
 - Remote Login, Screen Sharing, automatic login on headless machine - 
   see [install/README.md](install/README.md#headless-machine)
 - Importing `misc/tabliss/gruvbox.json` into the Tabliss extension
