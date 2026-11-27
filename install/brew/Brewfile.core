@@ -32,9 +32,10 @@ brew "htop"
 
 # Secrets
 brew "bitwarden-cli"
+brew "fnox"
 
 # Coding agents
-cask "claude-code" 
+cask "claude-code"
 cask "antigravity-cli"
 
 # Local models

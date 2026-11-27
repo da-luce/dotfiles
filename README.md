@@ -4,6 +4,7 @@
 
 ```sh
 xcode-select --install # needed for git
+gh auth login
 git clone https://github.com/da-luce/dotfiles ~/.dotfiles
 cd ~/.dotfiles
 ./install/bootstrap.sh desktop     # or: headless
@@ -18,7 +19,6 @@ Profiles:
 
 ## Manual steps after a run
 
-- Log in to utilities: `gh auth login`
 - Store the Secrets Manager machine account token so fnox can read secrets:
   `fnox set -g --provider kc BWS_ACCESS_TOKEN`
 - Remote Login, Screen Sharing, automatic login on headless machine - 

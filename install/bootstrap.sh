@@ -93,7 +93,29 @@ if [ -L "$HOME/.config" ]; then
 fi
 run stow --no-folding --restow -d "$REPO" -t "$HOME" dotfiles shared
 
-# ---------------------------------------------------------------- 4 tmux -----
+# ------------------------------------------------------------- 4 private -----
+step "Private dotfiles"
+# SSH config lives in a private repo, stowed the same way as this one.
+PRIVATE_REPO="$HOME/.ssh-config"
+PRIVATE_REMOTE="https://github.com/da-luce/ssh-config.git"
+if [ -d "$PRIVATE_REPO/.git" ]; then
+  info "already cloned: $PRIVATE_REPO"
+elif [ "$DRY_RUN" = "1" ]; then
+  info "[dry-run] git clone $PRIVATE_REMOTE $PRIVATE_REPO"
+else
+  # Private repo, so this needs credentials: gh auth login, then rerun.
+  git clone "$PRIVATE_REMOTE" "$PRIVATE_REPO" ||
+    warn "clone failed — run 'gh auth login', then rerun bootstrap"
+fi
+if [ -d "$PRIVATE_REPO/dotfiles" ]; then
+  run mkdir -p "$HOME/.ssh"
+  run chmod 700 "$HOME/.ssh"
+  run stow --no-folding --restow -d "$PRIVATE_REPO" -t "$HOME" dotfiles
+else
+  info "nothing to stow yet"
+fi
+
+# ---------------------------------------------------------------- 5 tmux -----
 step "tmux plugins"
 TPM="$HOME/.config/tmux/plugins/tpm"
 if [ -d "$TPM" ]; then
@@ -107,11 +129,11 @@ else
   [ "$DRY_RUN" = "1" ] || warn "tpm installer missing; run prefix + I inside tmux"
 fi
 
-# --------------------------------------------------------------- 5 hooks -----
+# --------------------------------------------------------------- 6 hooks -----
 step "Agent indicator hooks"
 run bash "$REPO/install/hooks.sh"
 
-# ------------------------------------------------------------- 6 desktop -----
+# ------------------------------------------------------------- 7 desktop -----
 if [ "$PROFILE" = "desktop" ]; then
   step "macOS defaults"
   run bash "$REPO/install/macos/defaults.sh"
@@ -134,7 +156,7 @@ else
   fi
 fi
 
-# ------------------------------------------------------------- 7 wrap up -----
+# ------------------------------------------------------------- 8 wrap up -----
 step "Done — manual steps left"
 cat <<'CHECKLIST'
     - gh auth login

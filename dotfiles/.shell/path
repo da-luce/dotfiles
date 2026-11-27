@@ -34,6 +34,8 @@ case $OS in
         ;;
 esac
 
+PATH="$HOME/.local/bin:$PATH"       # bws, see install/bws.sh
+
 # Add after go added to path
 PATH="$(go env GOPATH)/bin:$PATH"
 
